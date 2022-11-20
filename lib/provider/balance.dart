@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todotodo/provider/archive.dart';
+import 'package:todotodo/provider/orders.dart';
+import 'package:todotodo/provider/profile.dart';
+import 'package:todotodo/provider/work.dart';
 
 class Balance extends StatefulWidget {
   const Balance({super.key});
@@ -8,13 +14,16 @@ class Balance extends StatefulWidget {
 }
 
 class _BalanceState extends State<Balance> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text("Профиль"),
+          title: const Text("Баланс"),
           backgroundColor: const Color(0xff090696),
         ),
         body: Container(
@@ -28,7 +37,7 @@ class _BalanceState extends State<Balance> {
                 ),
                 subtitle: Padding(
                   padding: EdgeInsets.only(bottom: 10),
-                  child: Text('100 ₽', style: TextStyle(fontSize: 36, color: Color(0xff05b169))),
+                  child: Text('0 ₽', style: TextStyle(fontSize: 36, color: Color(0xff05b169))),
                 )
               ),
               Padding(
@@ -100,32 +109,48 @@ class _BalanceState extends State<Balance> {
               ListTile(
                 title: const Text('Профиль'),
                 leading: const Icon(Icons.account_box),
-                onTap: (){}
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
+                }
               ),
               ListTile(
                 title: const Text('Баланс'),
                 leading: const Icon(Icons.create),
-                onTap: (){}
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Balance()));
+                }
               ),
               ListTile(
                 title: const Text('Заказы в регионе'),
                 leading: const Icon(Icons.receipt_long_outlined),
-                onTap: (){}
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
+                }
               ),
               ListTile(
                 title: const Text('В работе'),
                 leading: const Icon(Icons.work),
-                onTap: (){}
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderWork()));
+                }
               ),
               ListTile(
                 title: const Text('Архив'),
                 leading: const Icon(Icons.archive),
-                onTap: (){}
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
+                }
               ),
               ListTile(
                 title: const Text('Выход'),
                 leading: const Icon(Icons.exit_to_app),
-                onTap: (){}
+                onTap: () async {
+                  final SharedPreferences prefs = await _prefs;
+                  final String? token = prefs.getString('token');
+                  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                  await prefs.remove('token');
+                  Navigator.pushReplacementNamed(context, '/');
+                }
               ),
             ],
           ),

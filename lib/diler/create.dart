@@ -1,10 +1,12 @@
 import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:todotodo/diler/archive.dart';
+import 'package:todotodo/diler/orders.dart';
+import 'package:todotodo/diler/profile.dart';
+import 'package:todotodo/diler/work.dart';
 
 
 class DilerCreate extends StatefulWidget {
@@ -54,7 +56,29 @@ class _DilerCreateState extends State<DilerCreate> {
   }
 
   _setdata() async {
-    var response =  await Dio().get('http://127.0.0.1:8000/api/v1/data/', options: Options(headers: {'Authorization': 'Token 1e5c9e89382f292f1a3fbe50cf325b8e0bd6ec99'}));
+    final SharedPreferences prefs = await _prefs;
+    final String? token = prefs.getString('token');
+    var isblanked = await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/isblanked/', options: Options(headers: {'Authorization': 'Token $token'}));
+    if (isblanked.data['isblanked']){
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Заполните профиль'),
+            content: const Text(''),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
+                }
+              ),
+            ],
+          );
+        },
+      );
+    }
+    var response =  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/data/', options: Options(headers: {'Authorization': 'Token $token'}));
     setState(() {
       shapes = response.data['shapes'];
       impls = response.data['implements'];
@@ -68,7 +92,6 @@ class _DilerCreateState extends State<DilerCreate> {
   }
   Widget _selectshape() {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: ButtonTheme(
         alignedDropdown: true,
@@ -104,7 +127,6 @@ class _DilerCreateState extends State<DilerCreate> {
 
   Widget _selectimplement() {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: ButtonTheme(
         alignedDropdown: true,
@@ -141,7 +163,6 @@ class _DilerCreateState extends State<DilerCreate> {
 
   Widget _selectpay() {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: ButtonTheme(
         alignedDropdown: true,
@@ -177,7 +198,6 @@ class _DilerCreateState extends State<DilerCreate> {
 
   Widget _selectdel() {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: ButtonTheme(
         alignedDropdown: true,
@@ -218,7 +238,7 @@ class _DilerCreateState extends State<DilerCreate> {
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text("Профиль"),
+          title: const Text("Создать заказ"),
           backgroundColor: const Color(0xff07995c),
         ),
         body: SingleChildScrollView(
@@ -240,7 +260,6 @@ class _DilerCreateState extends State<DilerCreate> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         controller: _addresscontr,
@@ -269,7 +288,6 @@ class _DilerCreateState extends State<DilerCreate> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         controller: _countwindcontr,
@@ -290,7 +308,6 @@ class _DilerCreateState extends State<DilerCreate> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         controller: _pricecontr,
@@ -311,7 +328,6 @@ class _DilerCreateState extends State<DilerCreate> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         minLines: 5,
@@ -361,7 +377,9 @@ class _DilerCreateState extends State<DilerCreate> {
                           MapEntry("upl", await MultipartFile.fromFile(file.path)),
                         ]);
                         }
-                        var response =  await Dio().post('http://127.0.0.1:8000/api/v1/order/', options: Options(headers: {'Authorization': 'Token 1e5c9e89382f292f1a3fbe50cf325b8e0bd6ec99'}), data: formData);
+                        final SharedPreferences prefs = await _prefs;
+                        final String? token = prefs.getString('token');
+                        var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/orders/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
                         if (response.data['success']){
                           return showDialog<void>(
                             context: context,
@@ -401,35 +419,35 @@ class _DilerCreateState extends State<DilerCreate> {
                 title: const Text('Профиль'),
                 leading: const Icon(Icons.account_box),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_profile');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
                 }
               ),
               ListTile(
                 title: const Text('Создать заказ'),
                 leading: const Icon(Icons.create),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_order_create');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerCreate()));
                 }
               ),
               ListTile(
-                title: const Text('Заказы в регионе'),
+                title: const Text('Мои заказы'),
                 leading: const Icon(Icons.receipt_long_outlined),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_orders');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
                 }
               ),
               ListTile(
                 title: const Text('В работе'),
                 leading: const Icon(Icons.work),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_work');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerWork()));
                 }
               ),
               ListTile(
                 title: const Text('Архив'),
                 leading: const Icon(Icons.archive),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_archive');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerArchive()));
                 }
               ),
               ListTile(
@@ -438,8 +456,9 @@ class _DilerCreateState extends State<DilerCreate> {
                 onTap: () async {
                   final SharedPreferences prefs = await _prefs;
                   final String? token = prefs.getString('token');
-                  await Dio().get('http://127.0.0.1:8000/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
                   await prefs.remove('token');
+                  Navigator.pushReplacementNamed(context, '/');
                 }
               ),
             ],

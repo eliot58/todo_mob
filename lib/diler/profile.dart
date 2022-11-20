@@ -1,9 +1,16 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:multiselect/multiselect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:todotodo/diler/archive.dart';
+import 'package:todotodo/diler/create.dart';
+import 'package:todotodo/diler/orders.dart';
+import 'package:todotodo/diler/work.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class DilerProfile extends StatefulWidget {
   const DilerProfile({super.key});
@@ -18,6 +25,7 @@ class _DilerProfileState extends State<DilerProfile> {
   final TextEditingController _phonecontr = TextEditingController();
   final TextEditingController _emailcontr = TextEditingController();
   final TextEditingController _addresscontr = TextEditingController();
+  bool issubmitmail = false;
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -29,11 +37,12 @@ class _DilerProfileState extends State<DilerProfile> {
 
   dynamic logopath;
 
-  final _formKey = GlobalKey<FormState>();
-
   String practice = '';
 
   bool ispicked = false;
+
+  final _formKey = GlobalKey<FormState>();
+  
 
   _pickimg() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -49,7 +58,9 @@ class _DilerProfileState extends State<DilerProfile> {
   }
 
   _setdata() async {
-    var response =  await Dio().get('http://127.0.0.1:8000/api/v1/profile/get/', options: Options(headers: {'Authorization': 'Token 62889d1f4515f03411220f9d27e01fb2db2eba9e'}));
+    final SharedPreferences prefs = await _prefs;
+    final String? token = prefs.getString('token');
+    var response =  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/profile/', options: Options(headers: {'Authorization': 'Token $token'}));
     setState(() {
       _logourl = response.data['logo'];
       practice = response.data['practice'];
@@ -60,6 +71,7 @@ class _DilerProfileState extends State<DilerProfile> {
       _addresscontr.text = response.data['warehouse_address'];
       items = response.data['regions'];
       _dropdownvalue = response.data['region'];
+      issubmitmail = response.data['submitemail'];
     });
   }
 
@@ -101,14 +113,13 @@ class _DilerProfileState extends State<DilerProfile> {
         child: Ink(
           height: 200,
           width: 250,
-          child: Image.network(_logourl),
+          child: Image.network('https://xn----gtbdlmdrgbq5j.xn--p1ai${_logourl}'),
         ),
       );
   }
 
   Widget _select() {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: ButtonTheme(
         alignedDropdown: true,
@@ -170,7 +181,6 @@ class _DilerProfileState extends State<DilerProfile> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         controller: _companycontr,
@@ -191,7 +201,6 @@ class _DilerProfileState extends State<DilerProfile> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         controller: _fiocontr,
@@ -212,7 +221,6 @@ class _DilerProfileState extends State<DilerProfile> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         controller: _phonecontr,
@@ -233,7 +241,6 @@ class _DilerProfileState extends State<DilerProfile> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         controller: _emailcontr,
@@ -254,7 +261,6 @@ class _DilerProfileState extends State<DilerProfile> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: TextFormField(
                         controller: _addresscontr,
@@ -277,6 +283,28 @@ class _DilerProfileState extends State<DilerProfile> {
                     child: _select()
                   ),
                   Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Container(
+                      padding: const EdgeInsets.only(right: 20, left: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Checkbox(
+                              value: issubmitmail,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  issubmitmail = value!;
+                                });
+                              },
+                            ),
+                          ),
+                          const Text('Подписка на рассылку'),
+                        ],
+                      )
+                    )
+                  ),
+                  Padding(
                     padding: const EdgeInsets.only(top: 5, bottom: 20),
                     child: ElevatedButton(
                       onPressed: () async {
@@ -287,9 +315,12 @@ class _DilerProfileState extends State<DilerProfile> {
                             'email': _emailcontr.text,
                             'company': _companycontr.text,
                             'warehouse_address': _addresscontr.text,
-                            'region': _dropdownvalue
+                            'region': _dropdownvalue,
+                            'submitemail': issubmitmail
                         });
-                        var response =  await Dio().post('http://127.0.0.1:8000/api/v1/profile/get/', options: Options(headers: {'Authorization': 'Token 1e5c9e89382f292f1a3fbe50cf325b8e0bd6ec99'}), data: formData);
+                        final SharedPreferences prefs = await _prefs;
+                        final String? token = prefs.getString('token');
+                        var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/profile/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
                         if (response.data['success']){
                           return showDialog<void>(
                             context: context,
@@ -329,35 +360,35 @@ class _DilerProfileState extends State<DilerProfile> {
                 title: const Text('Профиль'),
                 leading: const Icon(Icons.account_box),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_profile');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
                 }
               ),
               ListTile(
                 title: const Text('Создать заказ'),
                 leading: const Icon(Icons.create),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_order_create');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerCreate()));
                 }
               ),
               ListTile(
-                title: const Text('Заказы в регионе'),
+                title: const Text('Мои заказы'),
                 leading: const Icon(Icons.receipt_long_outlined),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_orders');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
                 }
               ),
               ListTile(
                 title: const Text('В работе'),
                 leading: const Icon(Icons.work),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_work');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerWork()));
                 }
               ),
               ListTile(
                 title: const Text('Архив'),
                 leading: const Icon(Icons.archive),
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/diler_archive');
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerArchive()));
                 }
               ),
               ListTile(
@@ -366,7 +397,7 @@ class _DilerProfileState extends State<DilerProfile> {
                 onTap: () async {
                   final SharedPreferences prefs = await _prefs;
                   final String? token = prefs.getString('token');
-                  await Dio().get('http://127.0.0.1:8000/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
                   await prefs.remove('token');
                   Navigator.pushReplacementNamed(context, '/');
                 }

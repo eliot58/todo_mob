@@ -1,18 +1,14 @@
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:multiselect/multiselect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todotodo/auth/login.dart';
 import 'package:todotodo/diler/archive.dart';
 import 'package:todotodo/diler/card.dart';
 import 'package:todotodo/diler/create.dart';
 import 'package:todotodo/diler/orders.dart';
 import 'package:todotodo/diler/profile.dart';
 import 'package:todotodo/diler/work.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 class DilerReview extends StatefulWidget {
   final int id;
@@ -150,56 +146,64 @@ class _DilerReviewState extends State<DilerReview> {
             ),
           )
         ),
-        drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
-              ListTile(
-                title: const Text('Профиль'),
-                leading: const Icon(Icons.account_box),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
-                }
-              ),
-              ListTile(
-                title: const Text('Создать заказ'),
-                leading: const Icon(Icons.create),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerCreate()));
-                }
-              ),
-              ListTile(
-                title: const Text('Мои заказы'),
-                leading: const Icon(Icons.receipt_long_outlined),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
-                }
-              ),
-              ListTile(
-                title: const Text('В работе'),
-                leading: const Icon(Icons.work),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerWork()));
-                }
-              ),
-              ListTile(
-                title: const Text('Архив'),
-                leading: const Icon(Icons.archive),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerArchive()));
-                }
-              ),
-              ListTile(
-                title: const Text('Выход'),
-                leading: const Icon(Icons.exit_to_app),
-                onTap: () async {
-                  final SharedPreferences prefs = await _prefs;
-                  final String? token = prefs.getString('token');
-                  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
-                  await prefs.remove('token');
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              ),
-            ],
+        drawer: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.75,
+          child: Drawer(
+            backgroundColor: const Color(0xff07995c),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20, top: 20),
+                  child: Image.asset("assets/img/todotodo_logo.png", width: 60, height: 60)
+                ),
+                ListTile(
+                  title: const Text('Профиль', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.account_box, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Создать заказ', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.create, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerCreate()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Мои заказы', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.receipt_long_outlined, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('В работе', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.work, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerWork()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Архив', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.archive, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerArchive()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Выход', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.exit_to_app, color: Colors.white),
+                  onTap: () async {
+                    final SharedPreferences prefs = await _prefs;
+                    final String? token = prefs.getString('token');
+                    await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                    await prefs.remove('token');
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Auth()));
+                  }
+                ),
+              ],
+            ),
           ),
         )
 

@@ -2,15 +2,12 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:multiselect/multiselect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todotodo/auth/login.dart';
 import 'package:todotodo/diler/archive.dart';
 import 'package:todotodo/diler/create.dart';
 import 'package:todotodo/diler/orders.dart';
 import 'package:todotodo/diler/work.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 class DilerProfile extends StatefulWidget {
   const DilerProfile({super.key});
@@ -40,6 +37,9 @@ class _DilerProfileState extends State<DilerProfile> {
   String practice = '';
 
   bool ispicked = false;
+
+  dynamic emailvalidator;
+  dynamic phonevalidator;
 
   final _formKey = GlobalKey<FormState>();
   
@@ -108,14 +108,14 @@ class _DilerProfileState extends State<DilerProfile> {
       );
     }
     return InkWell(
-        onTap: _pickimg,
-        splashColor: Colors.brown.withOpacity(0.5),
-        child: Ink(
-          height: 200,
-          width: 250,
-          child: Image.network('https://xn----gtbdlmdrgbq5j.xn--p1ai${_logourl}'),
-        ),
-      );
+      onTap: _pickimg,
+      splashColor: Colors.brown.withOpacity(0.5),
+      child: Ink(
+        height: 200,
+        width: 250,
+        child: Image.network('https://xn----gtbdlmdrgbq5j.xn--p1ai$_logourl'),
+      ),
+    );
   }
 
   Widget _select() {
@@ -195,6 +195,12 @@ class _DilerProfileState extends State<DilerProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -215,6 +221,12 @@ class _DilerProfileState extends State<DilerProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -235,6 +247,9 @@ class _DilerProfileState extends State<DilerProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          return phonevalidator;
+                        },
                       ),
                     )
                   ),
@@ -255,6 +270,9 @@ class _DilerProfileState extends State<DilerProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          return emailvalidator;
+                        },
                       ),
                     )
                   ),
@@ -275,6 +293,12 @@ class _DilerProfileState extends State<DilerProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -308,37 +332,47 @@ class _DilerProfileState extends State<DilerProfile> {
                     padding: const EdgeInsets.only(top: 5, bottom: 20),
                     child: ElevatedButton(
                       onPressed: () async {
-                        FormData formData = FormData.fromMap({
-                            "logo": logopath != null ?  await MultipartFile.fromFile(logopath, filename: 'logo') : null,
-                            "fio": _fiocontr.text,
-                            'phone': _phonecontr.text,
-                            'email': _emailcontr.text,
-                            'company': _companycontr.text,
-                            'warehouse_address': _addresscontr.text,
-                            'region': _dropdownvalue,
-                            'submitemail': issubmitmail
+                        var uservalidate =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/uservalidate/', data: {'email': _emailcontr.text});
+                        setState(() {
+                          emailvalidator = uservalidate.data['validate'];
                         });
-                        final SharedPreferences prefs = await _prefs;
-                        final String? token = prefs.getString('token');
-                        var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/profile/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
-                        if (response.data['success']){
-                          return showDialog<void>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Сохранено'),
-                                content: const Text(''),
-                                actions: <Widget>[
-                                  ElevatedButton(
-                                    child: const Text('Ok'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    }
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                        var phonevalidate =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/phonevalidate/', data: {'phone': _phonecontr.text});
+                        setState(() {
+                          phonevalidator = phonevalidate.data['validate'];
+                        });
+                        if (_formKey.currentState!.validate()){
+                          FormData formData = FormData.fromMap({
+                              "logo": logopath != null ?  await MultipartFile.fromFile(logopath, filename: 'logo') : null,
+                              "fio": _fiocontr.text,
+                              'phone': _phonecontr.text,
+                              'email': _emailcontr.text,
+                              'company': _companycontr.text,
+                              'warehouse_address': _addresscontr.text,
+                              'region': _dropdownvalue,
+                              'submitemail': issubmitmail
+                          });
+                          final SharedPreferences prefs = await _prefs;
+                          final String? token = prefs.getString('token');
+                          var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/profile/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
+                          if (response.data['success']){
+                            return showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Сохранено'),
+                                  content: const Text(''),
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      child: const Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      }
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
                       },
                       style: ButtonStyle(
@@ -353,56 +387,64 @@ class _DilerProfileState extends State<DilerProfile> {
             )
           ),
         ),
-        drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
-              ListTile(
-                title: const Text('Профиль'),
-                leading: const Icon(Icons.account_box),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
-                }
-              ),
-              ListTile(
-                title: const Text('Создать заказ'),
-                leading: const Icon(Icons.create),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerCreate()));
-                }
-              ),
-              ListTile(
-                title: const Text('Мои заказы'),
-                leading: const Icon(Icons.receipt_long_outlined),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
-                }
-              ),
-              ListTile(
-                title: const Text('В работе'),
-                leading: const Icon(Icons.work),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerWork()));
-                }
-              ),
-              ListTile(
-                title: const Text('Архив'),
-                leading: const Icon(Icons.archive),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerArchive()));
-                }
-              ),
-              ListTile(
-                title: const Text('Выход'),
-                leading: const Icon(Icons.exit_to_app),
-                onTap: () async {
-                  final SharedPreferences prefs = await _prefs;
-                  final String? token = prefs.getString('token');
-                  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
-                  await prefs.remove('token');
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              ),
-            ],
+        drawer: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.75,
+          child: Drawer(
+            backgroundColor: const Color(0xff07995c),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20, top: 20),
+                  child: Image.asset("assets/img/todotodo_logo.png", width: 60, height: 60)
+                ),
+                ListTile(
+                  title: const Text('Профиль', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.account_box, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Создать заказ', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.create, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerCreate()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Мои заказы', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.receipt_long_outlined, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('В работе', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.work, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerWork()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Архив', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.archive, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerArchive()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Выход', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.exit_to_app, color: Colors.white),
+                  onTap: () async {
+                    final SharedPreferences prefs = await _prefs;
+                    final String? token = prefs.getString('token');
+                    await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                    await prefs.remove('token');
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Auth()));
+                  }
+                ),
+              ],
+            ),
           ),
         )
 

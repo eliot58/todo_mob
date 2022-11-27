@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todotodo/auth/login.dart';
 import 'package:todotodo/diler/archive.dart';
 import 'package:todotodo/diler/orders.dart';
 import 'package:todotodo/diler/profile.dart';
@@ -34,6 +35,8 @@ class _DilerCreateState extends State<DilerCreate> {
 
   dynamic filespath;
 
+  String file1 = '';
+
   String optpay = 'Вид оплаты';
 
   var pays = ['Вид оплаты', 'Карта', 'Безнал'];
@@ -51,6 +54,12 @@ class _DilerCreateState extends State<DilerCreate> {
       List<File> files = result.paths.map((path) => File(path!)).toList();
       setState(() {
         filespath = files;
+        if (files.length == 1){
+          file1 = files[0].uri.pathSegments.last;
+        }
+        else {
+          file1 = '${files[0].uri.pathSegments.last}, .....';
+        }
       });
     }
   }
@@ -274,6 +283,12 @@ class _DilerCreateState extends State<DilerCreate> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -302,6 +317,12 @@ class _DilerCreateState extends State<DilerCreate> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -322,6 +343,12 @@ class _DilerCreateState extends State<DilerCreate> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -349,6 +376,10 @@ class _DilerCreateState extends State<DilerCreate> {
                     )
                   ),
                   Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(file1)
+                  ),
+                  Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: ElevatedButton(
                       onPressed: _pickimgs,
@@ -362,30 +393,36 @@ class _DilerCreateState extends State<DilerCreate> {
                     padding: const EdgeInsets.only(bottom: 20),
                     child: ElevatedButton(
                       onPressed: () async {
-                        FormData formData = FormData.fromMap({
-                            "shape": optshape,
-                            'implement': optimpl,
-                            'address': _addresscontr.text,
-                            'type_pay': optpay,
-                            'type_delivery': optdel,
-                            'amount': _countwindcontr.text,
-                            'price': _pricecontr.text,
-                            'comment': _commentcontr.text,
-                        });
-                        for (var file in filespath) {
-                          formData.files.addAll([
-                          MapEntry("upl", await MultipartFile.fromFile(file.path)),
-                        ]);
-                        }
-                        final SharedPreferences prefs = await _prefs;
-                        final String? token = prefs.getString('token');
-                        var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/orders/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
-                        if (response.data['success']){
+                        if (file1 != ''){
+                          if (_formKey.currentState!.validate()){
+                            FormData formData = FormData.fromMap({
+                                "shape": optshape,
+                                'implement': optimpl,
+                                'address': _addresscontr.text,
+                                'type_pay': optpay,
+                                'type_delivery': optdel,
+                                'amount': _countwindcontr.text,
+                                'price': _pricecontr.text,
+                                'comment': _commentcontr.text,
+                            });
+                            for (var file in filespath) {
+                              formData.files.addAll([
+                              MapEntry("upl", await MultipartFile.fromFile(file.path)),
+                            ]);
+                            }
+                            final SharedPreferences prefs = await _prefs;
+                            final String? token = prefs.getString('token');
+                            var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/orders/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
+                            if (response.data['success']){
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
+                            }
+                          }
+                        } else {
                           return showDialog<void>(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text('Заказ создан'),
+                                title: const Text('Прикрепите файлы'),
                                 content: const Text(''),
                                 actions: <Widget>[
                                   ElevatedButton(
@@ -412,56 +449,64 @@ class _DilerCreateState extends State<DilerCreate> {
             )
           ),
         ),
-        drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
-              ListTile(
-                title: const Text('Профиль'),
-                leading: const Icon(Icons.account_box),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
-                }
-              ),
-              ListTile(
-                title: const Text('Создать заказ'),
-                leading: const Icon(Icons.create),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerCreate()));
-                }
-              ),
-              ListTile(
-                title: const Text('Мои заказы'),
-                leading: const Icon(Icons.receipt_long_outlined),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
-                }
-              ),
-              ListTile(
-                title: const Text('В работе'),
-                leading: const Icon(Icons.work),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerWork()));
-                }
-              ),
-              ListTile(
-                title: const Text('Архив'),
-                leading: const Icon(Icons.archive),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerArchive()));
-                }
-              ),
-              ListTile(
-                title: const Text('Выход'),
-                leading: const Icon(Icons.exit_to_app),
-                onTap: () async {
-                  final SharedPreferences prefs = await _prefs;
-                  final String? token = prefs.getString('token');
-                  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
-                  await prefs.remove('token');
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              ),
-            ],
+        drawer: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.75,
+          child: Drawer(
+            backgroundColor: const Color(0xff07995c),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20, top: 20),
+                  child: Image.asset("assets/img/todotodo_logo.png", width: 60, height: 60)
+                ),
+                ListTile(
+                  title: const Text('Профиль', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.account_box, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerProfile()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Создать заказ', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.create, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerCreate()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Мои заказы', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.receipt_long_outlined, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerOrders()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('В работе', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.work, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerWork()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Архив', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.archive, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const DilerArchive()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Выход', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.exit_to_app, color: Colors.white),
+                  onTap: () async {
+                    final SharedPreferences prefs = await _prefs;
+                    final String? token = prefs.getString('token');
+                    await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                    await prefs.remove('token');
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Auth()));
+                  }
+                ),
+              ],
+            ),
           ),
         )
 

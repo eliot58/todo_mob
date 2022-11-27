@@ -1,25 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:todotodo/index.dart';
+import 'package:todotodo/auth/login.dart';
 
-
-void main() {
+void main() async {
   runApp(
-    MaterialApp(
-      theme: ThemeData(
-        inputDecorationTheme: InputDecorationTheme(
-          
-          filled: true,
-          fillColor: Colors.white,
-          hintStyle: const TextStyle(fontSize: 16),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-          )
-        )
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const Auth()
-      },
-    ),
+    const MaterialApp(
+      home: Auth(),
+    )
   );
 }

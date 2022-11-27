@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todotodo/auth/login.dart';
 import 'package:todotodo/provider/archive.dart';
 import 'package:todotodo/provider/balance.dart';
 import 'package:todotodo/provider/orders.dart';
+import 'package:todotodo/provider/send.dart';
 import 'package:todotodo/provider/work.dart';
 
 class ProviderProfile extends StatefulWidget {
@@ -43,6 +45,10 @@ class _ProviderProfileState extends State<ProviderProfile> {
   dynamic logopath;
 
   bool ispicked = false;
+
+  dynamic emailvalidator;
+  dynamic phone1validator;
+  dynamic phone2validator;
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -169,6 +175,12 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -189,6 +201,12 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -209,6 +227,12 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -229,6 +253,12 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -249,6 +279,9 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          return phone1validator;
+                        },
                       ),
                     )
                   ),
@@ -269,6 +302,12 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -289,6 +328,9 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          return phone2validator;
+                        },
                       ),
                     )
                   ),
@@ -309,6 +351,9 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          return emailvalidator;
+                        },
                       ),
                     )
                   ),
@@ -402,6 +447,12 @@ class _ProviderProfileState extends State<ProviderProfile> {
                               borderRadius: BorderRadius.circular(16),
                           )
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Заполните поле';
+                          }
+                          return null;
+                        },
                       ),
                     )
                   ),
@@ -409,43 +460,57 @@ class _ProviderProfileState extends State<ProviderProfile> {
                     padding: const EdgeInsets.only(top: 5, bottom: 20),
                     child: ElevatedButton(
                       onPressed: () async {
-                        FormData formData = FormData.fromMap({
-                          'company': _company.text,
-                          'legal_entity': _legalentity.text,
-                          'product_address': _productaddress.text,
-                          'contact_entity': _contactentity.text,
-                          'contact_phone': _contactphone.text,
-                          'service_entity': _serviceentity.text,
-                          'service_phone': _servicephone.text,
-                          'service_email': _serviceemail.text,
-                          'submitemail': issubmitmail,
-                          'logo': logopath != null ?  await MultipartFile.fromFile(logopath, filename: 'logo') : null,
-                          'description': _description.text,
-                          'shapes': selectedshapes,
-                          'implements': selectedimpl,
-                          'regions': selectedregions
+                        var uservalidate =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/uservalidate/', data: {'email': _serviceemail.text});
+                        setState(() {
+                          emailvalidator = uservalidate.data['validate'];
                         });
-                        final SharedPreferences prefs = await _prefs;
-                        final String? token = prefs.getString('token');
-                        var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/profile/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
-                        if (response.data['success']){
-                          return showDialog<void>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Сохранено'),
-                                content: const Text(''),
-                                actions: <Widget>[
-                                  ElevatedButton(
-                                    child: const Text('Ok'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    }
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                        var phone1validate =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/phonevalidate/', data: {'phone': _contactphone.text});
+                        setState(() {
+                          phone1validator = phone1validate.data['validate'];
+                        });
+                        var phone2validate =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/phonevalidate/', data: {'phone': _servicephone.text});
+                        setState(() {
+                          phone2validator = phone2validate.data['validate'];
+                        });
+                        if (_formKey.currentState!.validate()){
+                          FormData formData = FormData.fromMap({
+                            'company': _company.text,
+                            'legal_entity': _legalentity.text,
+                            'product_address': _productaddress.text,
+                            'contact_entity': _contactentity.text,
+                            'contact_phone': _contactphone.text,
+                            'service_entity': _serviceentity.text,
+                            'service_phone': _servicephone.text,
+                            'service_email': _serviceemail.text,
+                            'submitemail': issubmitmail,
+                            'logo': logopath != null ?  await MultipartFile.fromFile(logopath, filename: 'logo') : null,
+                            'description': _description.text,
+                            'shapes': selectedshapes,
+                            'implements': selectedimpl,
+                            'regions': selectedregions
+                          });
+                          final SharedPreferences prefs = await _prefs;
+                          final String? token = prefs.getString('token');
+                          var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/profile/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
+                          if (response.data['success']){
+                            return showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Сохранено'),
+                                  content: const Text(''),
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      child: const Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      }
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
                       },
                       style: ButtonStyle(
@@ -460,56 +525,71 @@ class _ProviderProfileState extends State<ProviderProfile> {
             )
           )
         ),
-        drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
-              ListTile(
-                title: const Text('Профиль'),
-                leading: const Icon(Icons.account_box),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
-                }
-              ),
-              ListTile(
-                title: const Text('Баланс'),
-                leading: const Icon(Icons.create),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Balance()));
-                }
-              ),
-              ListTile(
-                title: const Text('Заказы в регионе'),
-                leading: const Icon(Icons.receipt_long_outlined),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
-                }
-              ),
-              ListTile(
-                title: const Text('В работе'),
-                leading: const Icon(Icons.work),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderWork()));
-                }
-              ),
-              ListTile(
-                title: const Text('Архив'),
-                leading: const Icon(Icons.archive),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
-                }
-              ),
-              ListTile(
-                title: const Text('Выход'),
-                leading: const Icon(Icons.exit_to_app),
-                onTap: () async {
-                  final SharedPreferences prefs = await _prefs;
-                  final String? token = prefs.getString('token');
-                  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
-                  await prefs.remove('token');
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              ),
-            ],
+        drawer: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.75,
+          child: Drawer(
+            backgroundColor: const Color(0xff07995c),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20, top: 20),
+                  child: Image.asset("assets/img/todotodo_logo.png", width: 60, height: 60)
+                ),
+                ListTile(
+                  title: const Text('Профиль', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.account_box, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Баланс', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.monetization_on, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Balance()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Отправлено КП', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.send, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderSend()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Заказы в регионе', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.receipt_long_outlined, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('В работе', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.work, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderWork()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Архив', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.archive, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Выход', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.exit_to_app, color: Colors.white),
+                  onTap: () async {
+                    final SharedPreferences prefs = await _prefs;
+                    final String? token = prefs.getString('token');
+                    await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                    await prefs.remove('token');
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Auth()));
+                  }
+                ),
+              ],
+            ),
           ),
         )
 

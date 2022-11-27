@@ -2,10 +2,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todotodo/auth/login.dart';
 import 'package:todotodo/provider/archive.dart';
 import 'package:todotodo/provider/balance.dart';
 import 'package:todotodo/provider/orders.dart';
 import 'package:todotodo/provider/profile.dart';
+import 'package:todotodo/provider/send.dart';
 import 'package:todotodo/provider/work.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
@@ -51,6 +53,8 @@ class _ProviderOrderState extends State<ProviderOrder> {
 
   dynamic filepath;
 
+  String file1 = '';
+
 
   final _formKey = GlobalKey<FormState>();
 
@@ -61,6 +65,7 @@ class _ProviderOrderState extends State<ProviderOrder> {
       
       setState(() {
         filepath = result.files.single.path;
+        file1 = filepath.split('/').last;
       });
     }
     build(context);
@@ -250,203 +255,243 @@ class _ProviderOrderState extends State<ProviderOrder> {
                   padding: EdgeInsets.only(top: 5, bottom: 5),
                   child: Text('Предложение', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
                 ),
-                Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: TextFormField(
-                          controller: _date,
-                          obscureText: false,
-                          style: const TextStyle(fontSize: 16),
-                          decoration: InputDecoration(
-                            hintText: 'Дата поставки',
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintStyle: const TextStyle(fontSize: 16),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                            )
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: TextFormField(
+                            controller: _date,
+                            obscureText: false,
+                            style: const TextStyle(fontSize: 16),
+                            decoration: InputDecoration(
+                              hintText: 'Дата поставки',
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintStyle: const TextStyle(fontSize: 16),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                              )
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Заполните поле';
+                              }
+                              return null;
+                            },
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1950),
+                                  lastDate: DateTime(2100));
+                            
+                              if (pickedDate != null) {
+                                String formattedDate =
+                                    DateFormat('dd-MM-yyyy').format(pickedDate);
+                                
+                                setState(() {
+                                  _date.text =
+                                      formattedDate;
+                                });
+                              } else {}
+                            },
                           ),
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(1950),
-                                lastDate: DateTime(2100));
-            
-                            if (pickedDate != null) {
-                              String formattedDate =
-                                  DateFormat('dd-MM-yyyy').format(pickedDate);
-                              
-                              setState(() {
-                                _date.text =
-                                    formattedDate;
-                              });
-                            } else {}
-                          },
-                        ),
-                      )
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _selectshape()
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _selectimplement()
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: TextFormField(
-                          controller: _price,
-                          obscureText: false,
-                          style: const TextStyle(fontSize: 16),
-                          decoration: InputDecoration(
-                            hintText: 'Стоимость',
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintStyle: const TextStyle(fontSize: 16),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                            )
-                          ),
-                        ),
-                      )
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: TextFormField(
-                          minLines: 5,
-                          maxLines: 10,
-                          keyboardType: TextInputType.multiline,
-                          controller: _comment,
-                          obscureText: false,
-                          style: const TextStyle(fontSize: 16),
-                          decoration: InputDecoration(
-                            hintText: 'Комментарий',
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintStyle: const TextStyle(fontSize: 16),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                            )
-                          ),
-                        ),
-                      )
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: ElevatedButton(
-                        onPressed: _pickimg,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(const Color(0xff090696))
-                        ),
-                        child: const Text('Прикрепить файл')
-                      )
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, bottom: 20),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          FormData formData = FormData.fromMap({
-                            'date': _date.text,
-                            'shape': optshape,
-                            'implement': optimpl,
-                            'price': _price.text,
-                            'comment': _comment.text,
-                            "upload": filepath != null ?  await MultipartFile.fromFile(filepath, filename: 'quantity') : null,
-                          });
-                          final SharedPreferences prefs = await _prefs;
-                          final String? token = prefs.getString('token');
-                          var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/response/${widget.id}/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
-                          if (response.data['success']){
-                            return showDialog<void>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Предложение отправлено'),
-                                  content: const Text(''),
-                                  actions: <Widget>[
-                                    ElevatedButton(
-                                      child: const Text('Ok'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      }
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(const Color(0xff090696))
-                        ),
-                        child: const Text('Отправить')
+                        )
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _selectshape()
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _selectimplement()
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: TextFormField(
+                            controller: _price,
+                            obscureText: false,
+                            style: const TextStyle(fontSize: 16),
+                            decoration: InputDecoration(
+                              hintText: 'Стоимость',
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintStyle: const TextStyle(fontSize: 16),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                              )
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Заполните поле';
+                              }
+                              return null;
+                            },
+                          ),
+                        )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: TextFormField(
+                            minLines: 5,
+                            maxLines: 10,
+                            keyboardType: TextInputType.multiline,
+                            controller: _comment,
+                            obscureText: false,
+                            style: const TextStyle(fontSize: 16),
+                            decoration: InputDecoration(
+                              hintText: 'Комментарий',
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintStyle: const TextStyle(fontSize: 16),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                              )
+                            ),
+                          ),
+                        )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(file1)
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: ElevatedButton(
+                          onPressed: _pickimg,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xff090696))
+                          ),
+                          child: const Text('Прикрепить файл')
+                        )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5, bottom: 20),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (file1 == ''){
+                              return showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Прикрепите файл'),
+                                    content: const Text(''),
+                                    actions: <Widget>[
+                                      ElevatedButton(
+                                        child: const Text('Ok'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        }
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              if (_formKey.currentState!.validate()){
+                                FormData formData = FormData.fromMap({
+                                  'date': _date.text,
+                                  'shape': optshape,
+                                  'implement': optimpl,
+                                  'price': _price.text,
+                                  'comment': _comment.text,
+                                  "upload": filepath != null ?  await MultipartFile.fromFile(filepath, filename: 'quantity') : null,
+                                });
+                                final SharedPreferences prefs = await _prefs;
+                                final String? token = prefs.getString('token');
+                                var response =  await Dio().post('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/response/${widget.id}/', options: Options(headers: {'Authorization': 'Token $token'}), data: formData);
+                                if (response.data['success']){
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderSend()));
+                                }
+                              }
+                            }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xff090696))
+                          ),
+                          child: const Text('Отправить')
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ],
             )
           ),
         ),
-        drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
-              ListTile(
-                title: const Text('Профиль'),
-                leading: const Icon(Icons.account_box),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
-                }
-              ),
-              ListTile(
-                title: const Text('Баланс'),
-                leading: const Icon(Icons.create),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Balance()));
-                }
-              ),
-              ListTile(
-                title: const Text('Заказы в регионе'),
-                leading: const Icon(Icons.receipt_long_outlined),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
-                }
-              ),
-              ListTile(
-                title: const Text('В работе'),
-                leading: const Icon(Icons.work),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderWork()));
-                }
-              ),
-              ListTile(
-                title: const Text('Архив'),
-                leading: const Icon(Icons.archive),
-                onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
-                }
-              ),
-              ListTile(
-                title: const Text('Выход'),
-                leading: const Icon(Icons.exit_to_app),
-                onTap: () async {
-                  final SharedPreferences prefs = await _prefs;
-                  final String? token = prefs.getString('token');
-                  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
-                  await prefs.remove('token');
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              ),
-            ],
+        drawer: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.75,
+          child: Drawer(
+            backgroundColor: const Color(0xff07995c),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20, top: 20),
+                  child: Image.asset("assets/img/todotodo_logo.png", width: 60, height: 60)
+                ),
+                ListTile(
+                  title: const Text('Профиль', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.account_box, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Баланс', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.monetization_on, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Balance()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Отправлено КП', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.send, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderSend()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Заказы в регионе', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.receipt_long_outlined, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('В работе', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.work, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderWork()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Архив', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.archive, color: Colors.white),
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
+                  }
+                ),
+                ListTile(
+                  title: const Text('Выход', style: TextStyle(color: Colors.white)),
+                  leading: const Icon(Icons.exit_to_app, color: Colors.white),
+                  onTap: () async {
+                    final SharedPreferences prefs = await _prefs;
+                    final String? token = prefs.getString('token');
+                    await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                    await prefs.remove('token');
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Auth()));
+                  }
+                ),
+              ],
+            ),
           ),
         )
 

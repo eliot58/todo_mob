@@ -1,12 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/auth/login.dart';
+import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/provider/archive.dart';
 import 'package:todotodo/provider/orders.dart';
 import 'package:todotodo/provider/profile.dart';
-import 'package:todotodo/provider/send.dart';
-import 'package:todotodo/provider/work.dart';
+import 'package:todotodo/provider/works.dart';
 
 class Balance extends StatefulWidget {
   const Balance({super.key});
@@ -18,162 +20,144 @@ class Balance extends StatefulWidget {
 class _BalanceState extends State<Balance> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  dynamic _items = [];
+  
+
+  void _bottomTab (int index) async {
+    if (index==0){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
+    } else if (index==1) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const Balance()));
+    } else if (index==2) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProviderWorks()));
+    } else if (index==3) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
+    } else if (index==4) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
+    }
+  }
+
+  _setList() async {
+    final SharedPreferences prefs = await _prefs;
+    final String? token = prefs.getString('token');
+    var response =  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/balance/', options: Options(headers: {'Authorization': 'Token $token'}));
+    if (!mounted) return;
+    print(response.data);
+    setState(() {
+      _items = response.data;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _setList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text("Баланс"),
-          backgroundColor: const Color(0xff090696),
-        ),
-        body: Container(
-          padding: const EdgeInsets.only(top: 5),
-          child: Column(
-            children: <Widget>[
-              const ListTile(
-                title: Padding(
-                  padding: EdgeInsets.only(bottom: 10, top: 10),
-                  child: Text('Денег на счету', style: TextStyle(fontSize: 14)),
-                ),
-                subtitle: Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text('0 ₽', style: TextStyle(fontSize: 36, color: Color(0xff05b169))),
-                )
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 150,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(const Color(0xff1f5485))
-                        ),
-                        child: const Text('Счет')
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(const Color(0xff1f5485))
-                        ),
-                        child: const Text('Сбер')
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 150,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(const Color(0xff1f5485))
-                        ),
-                        child: const Text('Вопрос')
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(const Color(0xff19178b))
-                        ),
-                        child: const Text('10000')
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+    return Scaffold(
+      bottomNavigationBar: CustomNavigationBar(
+        onTap: _bottomTab,
+        currentIndex: 1,
+        unSelectedColor: const Color(0xff8A8A8A
+),
+        selectedColor: const Color(0xff080696),
+        items: <CustomNavigationBarItem>[
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.orders),
+            title: const Text('Заказы')
+          ),
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.wallet),
+            title: const Text('Подписка')
+          ),
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.redo),
+            title: const Text('В работе')
+          ),
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.archive),
+            title: const Text('Архив')
+          ),
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.bag),
+            title: const Text('Профиль')
           )
-        ),
-        drawer: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.75,
-          child: Drawer(
-            backgroundColor: const Color(0xff07995c),
-            child: ListView(
+        ]
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 100),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20, top: 20),
-                  child: Image.asset("assets/img/todotodo_logo.png", width: 60, height: 60)
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Image.asset('assets/img/provider-logo.png', width: 43, height: 43),
                 ),
-                ListTile(
-                  title: const Text('Профиль', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.account_box, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Баланс', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.monetization_on, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Balance()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Отправлено КП', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.send, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderSend()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Заказы в регионе', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.receipt_long_outlined, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('В работе', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.work, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderWork()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Архив', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.archive, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Выход', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.exit_to_app, color: Colors.white),
+                const Text('Todotodo.поставщик', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xff080696
+))),
+                GestureDetector(
                   onTap: () async {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Login()));
                     final SharedPreferences prefs = await _prefs;
                     final String? token = prefs.getString('token');
-                    await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
                     await prefs.remove('token');
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Auth()));
-                  }
-                ),
-              ],
+                    Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                  },
+                  child: const Icon(Icons.exit_to_app),
+                )
+              ]
             ),
-          ),
-        )
-
-      ),
+            Padding(
+              padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: _items.length,
+                shrinkWrap: true, itemBuilder: (BuildContext context, int index) { 
+                return Card(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          width: double.infinity,
+                          color: const Color(0xffEBEBEB),
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                          child: Text(_items[index]['title'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+                        ),
+                        Center(
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                child: Text(_items[index]['price'].toString(), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff080696))),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                child: Text(_items[index]['description'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color(0xff15CE73))),
+                                  onPressed: null, 
+                                  child: const Text('Купить', style: TextStyle(color: Color(0xffffffff)))
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ]
+                    ),
+                  );
+                },
+              )
+            )
+          ],
+        ),
+      )
     );
   }
 }

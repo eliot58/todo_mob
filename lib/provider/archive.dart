@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/auth/login.dart';
+import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/provider/balance.dart';
 import 'package:todotodo/provider/orders.dart';
 import 'package:todotodo/provider/profile.dart';
-import 'package:todotodo/provider/send.dart';
-import 'package:todotodo/provider/work.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:todotodo/provider/works.dart';
 
 class ProviderArchive extends StatefulWidget {
   const ProviderArchive({super.key});
@@ -18,14 +19,33 @@ class ProviderArchive extends StatefulWidget {
 
 class _ProviderArchiveState extends State<ProviderArchive> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  void _bottomTab (int index) async {
+    if (index==0){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
+    } else if (index==1) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const Balance()));
+    } else if (index==2) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProviderWorks()));
+    } else if (index==3) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
+    } else if (index==4) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
+    }
+  }
+
   dynamic _orderlist = [];
+
+  bool setarchive = false;
 
   _setList() async {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
     var response =  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/archive/', options: Options(headers: {'Authorization': 'Token $token'}));
+    if (!mounted) return;
     setState(() {
       _orderlist = response.data;
+      setarchive = true;
     });
   }
 
@@ -37,175 +57,146 @@ class _ProviderArchiveState extends State<ProviderArchive> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text("Архив"),
-          backgroundColor: const Color(0xff090696),
-        ),
-        body: Container(
-          color: Colors.white,
-          child: ListView.builder(
-            itemCount: _orderlist.length,
-            itemBuilder: (BuildContext context, int index){
-              return Card(
-                child: ListTile(
-                  title: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(_orderlist[index]['date'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      bottomNavigationBar: CustomNavigationBar(
+        onTap: _bottomTab,
+        currentIndex: 3,
+        unSelectedColor: const Color(0xff8A8A8A
+),
+        selectedColor: const Color(0xff080696),
+        items: <CustomNavigationBarItem>[
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.orders),
+            title: const Text('Заказы')
+          ),
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.wallet),
+            title: const Text('Подписка')
+          ),
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.redo),
+            title: const Text('В работе')
+          ),
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.archive),
+            title: const Text('Архив')
+          ),
+          CustomNavigationBarItem(
+            icon: const Icon(CustomIcon.bag),
+            title: const Text('Профиль')
+          )
+        ]
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 100, bottom: 25),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text('Профиль: ${_orderlist[index]["shape"]}', style: const TextStyle(color: Colors.black)),
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Image.asset('assets/img/provider-logo.png', width: 43, height: 43),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text('Фурнитура: ${_orderlist[index]["implement"]}', style: const TextStyle(color: Colors.black)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text('Стоимость: ${_orderlist[index]["price"]}', style: const TextStyle(color: Colors.black)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          children: <Widget>[
-                            const Text('Эскиз: ', style: TextStyle(color: Colors.black)),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                minimumSize: const Size(50, 30),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                alignment: Alignment.centerLeft
-                              ),
-                              onPressed: () async {
-                                var url = Uri.parse('https://xn----gtbdlmdrgbq5j.xn--p1ai${_orderlist[index]["scetch_url"]}');
-                                if (!await launchUrl(url)) {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                              child: Text(_orderlist[index]["scetch"], style: const TextStyle(color: Colors.blue))
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          children: <Widget>[
-                            const Text('Ваше КП: ', style: TextStyle(color: Colors.black)),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                minimumSize: const Size(50, 30),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                alignment: Alignment.centerLeft
-                              ),
-                              onPressed: () async {
-                                var url = Uri.parse('https://xn----gtbdlmdrgbq5j.xn--p1ai${_orderlist[index]["file_url"]}');
-                                if (!await launchUrl(url)) {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                              child: Text(_orderlist[index]["file"], style: const TextStyle(color: Colors.blue))
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text('Имя: ${_orderlist[index]["fio"]}', style: const TextStyle(color: Colors.black)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text('Телефон: ${_orderlist[index]["phone"]}', style: const TextStyle(color: Colors.black)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text('E-mail: ${_orderlist[index]["email"]}', style: const TextStyle(color: Colors.black)),
-                      ),
-                    ],
+                      const Text('Todotodo.поставщик', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xff080696
+        ))),
+                      GestureDetector(
+                        onTap: () async {
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Login()));
+                          final SharedPreferences prefs = await _prefs;
+                          final String? token = prefs.getString('token');
+                          await prefs.remove('token');
+                          Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                        },
+                        child: const Icon(Icons.exit_to_app),
+                      )
+                    ]
                   ),
-                  onTap: null,
                 ),
-              );
-            },
-          )
-        ),
-        drawer: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.75,
-          child: Drawer(
-            backgroundColor: const Color(0xff07995c),
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20, top: 20),
-                  child: Image.asset("assets/img/todotodo_logo.png", width: 60, height: 60)
-                ),
-                ListTile(
-                  title: const Text('Профиль', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.account_box, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderProfile()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Баланс', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.monetization_on, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Balance()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Отправлено КП', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.send, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderSend()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Заказы в регионе', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.receipt_long_outlined, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderOrders()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('В работе', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.work, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderWork()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Архив', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.archive, color: Colors.white),
-                  onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const ProviderArchive()));
-                  }
-                ),
-                ListTile(
-                  title: const Text('Выход', style: TextStyle(color: Colors.white)),
-                  leading: const Icon(Icons.exit_to_app, color: Colors.white),
-                  onTap: () async {
-                    final SharedPreferences prefs = await _prefs;
-                    final String? token = prefs.getString('token');
-                    await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
-                    await prefs.remove('token');
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Auth()));
-                  }
-                ),
-              ],
-            ),
+              ),
+              setarchive ? ListView.builder(
+                physics: const ClampingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _orderlist.length,
+                itemBuilder: (BuildContext context, int index) {  
+                  return Card(
+                    elevation: 16,
+                    shadowColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: const BorderSide(color: Color(0xff080696))
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      child: ListTile(
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'Дата: ',
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
+                                  children: <TextSpan>[
+                                    TextSpan(text: _orderlist[index]["date"],style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))
+                                  ],
+                                )
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'Профиль: ',
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
+                                  children: <TextSpan>[
+                                    TextSpan(text: _orderlist[index]["shape"],style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))
+                                  ],
+                                )
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'Фурнитура: ',
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
+                                  children: <TextSpan>[
+                                    TextSpan(text: _orderlist[index]["implement"],style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))
+                                  ],
+                                )
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'Желаемая сумма: ',
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
+                                  children: <TextSpan>[
+                                    TextSpan(text: _orderlist[index]["price"].toString(),style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))
+                                  ],
+                                )
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    )
+                  );
+                },
+              ) : const Center(child: CircularProgressIndicator())
+            ],
           ),
-        )
-
+        ),
       ),
     );
   }
 }
-

@@ -48,11 +48,17 @@ dependencies:
   flutter_switch: ^0.3.2
   flutter_svg: ^1.1.6
   custom_navigation_bar: ^0.8.2
+  mobx: ^2.1.4
+  flutter_mobx: ^2.0.6+5
+  flutter_native_splash: ^2.2.16
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  mobx_codegen: ^2.1.1
+  build_runner: ^2.3.3
 
 
 

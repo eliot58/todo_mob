@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:todotodo/auth/login.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todotodo/diler/orders.dart';
-import 'package:todotodo/provider/orders.dart';
+import 'package:todotodo/presentation/auth/login.dart';
+import 'package:todotodo/presentation/diler/orders.dart';
+import 'package:todotodo/presentation/provider/orders.dart';
 
 
 
@@ -14,7 +14,7 @@ void main() async {
   final String? token = prefs.getString('token');
   if (token != null){
     try {
-      var response =  await Dio().get('https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v1/isdiler/', options: Options(headers: {'Authorization': 'Token $token'}));
+      var response =  await Dio().get('http://127.0.0.1:8000/api/v2/isdiler/', options: Options(headers: {'Authorization': 'Token $token'}));
       if (response.data['success']){
         homepage = const DilerOrders();
       }

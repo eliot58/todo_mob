@@ -33,6 +33,10 @@ abstract class ProfileStateBase with Store {
   List<String> selectedImpl = [];
   List<String> selectedRegions = [];
 
+  Map<String, int> selectedShapesId = {};
+  Map<String, int> selectedImplementsId = {};
+  Map<String, int> selectedRegionsId = {};
+
   dynamic logourl;
 
   @observable
@@ -67,12 +71,21 @@ abstract class ProfileStateBase with Store {
     serviceemail.selection = TextSelection.fromPosition(TextPosition(offset: serviceemail.text.length));
     description.text = data['description'];
     description.selection = TextSelection.fromPosition(TextPosition(offset: description.text.length));
-    shapes.addAll([for(var shape in data["shapes_select"]) shape["data"]]);
-    implements.addAll([for(var implement in data["implements_select"]) implement["data"]]);
-    regions.addAll([for(var region in data["regions_select"]) region["data"]]);
-    selectedShapes.addAll([for(var shape in data["shapes"]) shapes[shape-1]]);
-    selectedImpl.addAll([for(var implement in data["implements"]) implements[implement-1]]);
-    selectedRegions.addAll([for(var region in data["regions"]) regions[region-1]]);
+    for (var shape in data["shapes_select"]) {
+      shapes.add(shape["data"]);
+      selectedShapesId[shape["data"]] = shape["id"];
+    }
+    for (var implement in data["implements_select"]) {
+      implements.add(implement["data"]);
+      selectedImplementsId[implement["data"]] = implement["id"];
+    }
+    for (var region in data["regions_select"]) {
+      regions.add(region["data"]);
+      selectedRegionsId[region["data"]] = region["id"];
+    }
+    selectedShapes.addAll([for (var shape in data["shapes"]) shapes[shape - 1]]);
+    selectedImpl.addAll([for (var implement in data["implements"]) implements[implement - 1]]);
+    selectedRegions.addAll([for (var region in data["regions"]) regions[region - 1]]);
     isLoading = false;
   }
 
@@ -98,6 +111,18 @@ abstract class ProfileStateBase with Store {
   }
 
   Future<void> saveProfile() async {
-    profileRepository.saveProviderProfile(company: company.text, legalentity: legalentity.text, productaddress: productaddress.text, contactentity: contactentity.text, contactphone: contactphone.text, serviceentity: serviceentity.text, servicephone: servicephone.text, serviceemail: serviceemail.text, description: description.text, shapes: selectedShapes, implements: selectedImpl, regions: selectedRegions);
+    profileRepository.saveProviderProfile(
+        company: company.text,
+        legalentity: legalentity.text,
+        productaddress: productaddress.text,
+        contactentity: contactentity.text,
+        contactphone: contactphone.text,
+        serviceentity: serviceentity.text,
+        servicephone: servicephone.text,
+        serviceemail: serviceemail.text,
+        description: description.text,
+        shapes: [for (var shape in selectedShapes) selectedShapesId[shape]!],
+        implements: [for (var impl in selectedImpl) selectedImplementsId[impl]!],
+        regions: [for (var region in selectedRegions) selectedRegionsId[region]!]);
   }
 }

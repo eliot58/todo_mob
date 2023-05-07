@@ -81,9 +81,10 @@ abstract class OrderStateBase with Store {
 
   @action
   Future<void> createOrder() async {
-    orderRepository.createOrder(
+    await orderRepository.createOrder(
         shape: shapesId[optshape]!,
         implement: implementsId[optimpl]!,
+        address: addressController.text,
         typePay: optpay == 'Карта' ? "C" : "N",
         typeDelivery: (dels.indexOf(optdel) - 1).toString(),
         amountwindow: int.parse(windowCountController.text),

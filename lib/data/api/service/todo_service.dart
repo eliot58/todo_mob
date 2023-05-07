@@ -4,6 +4,7 @@ import 'package:todotodo/data/api/request/get_login_body.dart';
 import 'package:todotodo/data/api/request/get_profile_body.dart';
 import 'package:todotodo/data/api/request/get_register_body.dart';
 import 'package:todotodo/data/api/request/order_body.dart';
+import 'package:todotodo/data/api/request/quantity_body.dart';
 
 class TodoService {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -52,14 +53,21 @@ class TodoService {
   Future<List<dynamic>> getWorks() async {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
-    final response = await _dio.get('/works/', options: Options(headers: {'Authorization': 'Token $token'}));
+    final response = await _dio.get('/work/', options: Options(headers: {'Authorization': 'Token $token'}));
+    return response.data;
+  }
+
+  Future<List<dynamic>> getQuantities() async {
+    final SharedPreferences prefs = await _prefs;
+    final String? token = prefs.getString('token');
+    final response = await _dio.get('/quantity/', options: Options(headers: {'Authorization': 'Token $token'}));
     return response.data;
   }
 
   Future<List<dynamic>> getArchives() async {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
-    final response = await _dio.get('/works/', options: Options(headers: {'Authorization': 'Token $token'}));
+    final response = await _dio.get('/archive/', options: Options(headers: {'Authorization': 'Token $token'}));
     return response.data;
   }
 
@@ -94,7 +102,7 @@ class TodoService {
   Future<dynamic> getOrder(int id) async {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
-    final response = await _dio.get('/diler-profile/', options: Options(headers: {'Authorization': 'Token $token'}));
+    final response = await _dio.get('/order/?id=$id', options: Options(headers: {'Authorization': 'Token $token'}));
     return response.data;
   }
 
@@ -119,7 +127,6 @@ class TodoService {
     return response.data;
   }
 
-
   Future<dynamic> sendReview() async {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
@@ -127,10 +134,10 @@ class TodoService {
     return response.data;
   }
 
-  Future<dynamic> createQuantity() async {
+  Future<dynamic> createQuantity(CreateQuantityBody body) async {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
-    final response = await _dio.get('/getitems/', options: Options(headers: {'Authorization': 'Token $token'}));
+    final response = await _dio.post('/quantity/', options: Options(headers: {'Authorization': 'Token $token'}), data: body.toApi());
     return response.data;
   }
 
@@ -145,6 +152,20 @@ class TodoService {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
     final response = await _dio.get('/prices/', options: Options(headers: {'Authorization': 'Token $token'}));
+    return response.data;
+  }
+
+  Future<dynamic> logout() async {
+    final SharedPreferences prefs = await _prefs;
+    final String? token = prefs.getString('token');
+    await prefs.remove('token');
+    _dio.get('/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+  }
+
+  Future<dynamic> submitOrder(int id) async {
+    final SharedPreferences prefs = await _prefs;
+    final String? token = prefs.getString('token');
+    final response = await _dio.get('/provider-submit/$id/', options: Options(headers: {'Authorization': 'Token $token'}));
     return response.data;
   }
 }

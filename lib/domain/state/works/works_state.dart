@@ -27,12 +27,18 @@ abstract class WorksStateBase with Store {
     isLoading = false;
   }
 
-
   @action
   Future<void> getWorksAndQuantities() async {
     isLoading = true;
-    final data = await worksRepository.getWorks();
+    var data = await worksRepository.getWorks();
     works = data;
+    data = await worksRepository.getQuantities();
+    quantities = data;
     isLoading = false;
+  }
+
+  @action
+  Future<void> submitOrder({required int id}) async {
+    await worksRepository.submitOrder(id: id);
   }
 }

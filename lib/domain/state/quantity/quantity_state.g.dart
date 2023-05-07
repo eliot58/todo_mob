@@ -37,8 +37,9 @@ mixin _$QuantityState on QuantityStateBase, Store {
       AsyncAction('QuantityStateBase.createQuantity', context: context);
 
   @override
-  Future<void> createQuantity() {
-    return _$createQuantityAsyncAction.run(() => super.createQuantity());
+  Future<void> createQuantity({required int orderId}) {
+    return _$createQuantityAsyncAction
+        .run(() => super.createQuantity(orderId: orderId));
   }
 
   @override

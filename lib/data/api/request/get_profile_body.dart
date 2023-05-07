@@ -26,9 +26,9 @@ class GetProviderProfileBody {
   final String servicephone;
   final String serviceemail;
   final String description;
-  final List<String> shapes;
-  final List<String> implements;
-  final List<String> regions;
+  final List<int> shapes;
+  final List<int> implements;
+  final List<int> regions;
   final MultipartFile? logo;
 
   GetProviderProfileBody(

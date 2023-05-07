@@ -1,11 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
+import 'package:todotodo/data/api/service/todo_service.dart';
 import 'package:todotodo/domain/state/orders/orders_state.dart';
 import 'package:todotodo/internal/dependencies/orders_module.dart';
 import 'package:todotodo/presentation/auth/login.dart';
@@ -29,8 +28,6 @@ class _DilerOrdersState extends State<DilerOrders> {
   double _endPrice = 200000;
 
   bool _new = true;
-
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   final TextEditingController _searchController = TextEditingController();
 
@@ -88,10 +85,8 @@ class _DilerOrdersState extends State<DilerOrders> {
                         GestureDetector(
                           onTap: () async {
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
-                            final SharedPreferences prefs = await _prefs;
-                            final String? token = prefs.getString('token');
-                            await prefs.remove('token');
-                            Dio().delete('http://127.0.0.1:8000/api/v2/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                            final service = TodoService();
+                            service.logout();
                           },
                           child: const Icon(Icons.exit_to_app),
                         )
@@ -116,7 +111,7 @@ class _DilerOrdersState extends State<DilerOrders> {
                             hintText: 'Search',
                             prefixIcon: const Icon(Icons.search),
                             suffixIcon: IconButton(
-                              icon: const Icon(CustomIcon.filter, color: Color(0xff080696)),
+                              icon: SvgPicture.asset('assets/img/filter.svg'),
                               onPressed: () {
                                 showDialog(
                                     context: context,
@@ -237,109 +232,112 @@ class _DilerOrdersState extends State<DilerOrders> {
                     ),
                   ),
                   ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: ordersState.orders.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Card(
-                                  elevation: 16,
-                                  shadowColor: Colors.black,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: const BorderSide(color: Color(0xff15CE73))),
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                                      child: ListTile(
-                                        onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => Order(id: ordersState.orders[index]["id"])));
-                                        },
-                                        trailing: SizedBox(
-                                          height: double.infinity,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              IconButton(
-                                                  onPressed: () {
-                                                    ordersState.deleteOrder(index);
-                                                  },
-                                                  icon: const Icon(Icons.delete)),
-                                              Image.asset('assets/img/folder.png')
-                                            ],
-                                          ),
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 12),
-                                              child: Text(ordersState.orders[index]['date'], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 12),
-                                              child: RichText(
-                                                  text: TextSpan(
-                                                text: 'Заказчик: ',
-                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                children: <TextSpan>[TextSpan(text: ordersState.orders[index]["user"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
-                                              )),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 12),
-                                              child: RichText(
-                                                  text: TextSpan(
-                                                text: 'Количество КП: ',
-                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                children: <TextSpan>[TextSpan(text: ordersState.orders[index]['quantity_set'].length.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
-                                              )),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 12),
-                                              child: RichText(
-                                                  text: TextSpan(
-                                                text: 'Желаемая цена: ',
-                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                children: <TextSpan>[TextSpan(text: ordersState.orders[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
-                                              )),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 12),
-                                              child: RichText(
-                                                  text: TextSpan(
-                                                text: 'Профиль: ',
-                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                children: <TextSpan>[TextSpan(text: ordersState.orders[index]["shape"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
-                                              )),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 12),
-                                              child: RichText(
-                                                  text: TextSpan(
-                                                text: 'Фурнитура: ',
-                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                children: <TextSpan>[TextSpan(text: ordersState.orders[index]["implement"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
-                                              )),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 12),
-                                              child: RichText(
-                                                  text: TextSpan(
-                                                text: 'Адрес: ',
-                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                children: <TextSpan>[
-                                                  TextSpan(
-                                                    text: ordersState.orders[index]['address'],
-                                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
-                                                  )
-                                                ],
-                                              )),
-                                            ),
+                    physics: const ClampingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: ordersState.orders.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Card(
+                            elevation: 16,
+                            shadowColor: Colors.black,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: const BorderSide(color: Color(0xff15CE73))),
+                            child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                                child: ListTile(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Order(id: ordersState.orders[index]["id"])));
+                                  },
+                                  trailing: SizedBox(
+                                    height: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                            onPressed: () async {
+                                              await ordersState.deleteOrder(index);
+                                              setState(() {
+                                                ordersState.orders.removeAt(index);
+                                              });
+                                            },
+                                            icon: const Icon(Icons.delete)),
+                                        Image.asset('assets/img/folder.png')
+                                      ],
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: Text(ordersState.orders[index]['date'], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: RichText(
+                                            text: TextSpan(
+                                          text: 'Заказчик: ',
+                                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
+                                          children: <TextSpan>[TextSpan(text: ordersState.orders[index]["user"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: RichText(
+                                            text: TextSpan(
+                                          text: 'Количество КП: ',
+                                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
+                                          children: <TextSpan>[TextSpan(text: ordersState.orders[index]['quantity_set'].length.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: RichText(
+                                            text: TextSpan(
+                                          text: 'Желаемая цена: ',
+                                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
+                                          children: <TextSpan>[TextSpan(text: ordersState.orders[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: RichText(
+                                            text: TextSpan(
+                                          text: 'Профиль: ',
+                                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
+                                          children: <TextSpan>[TextSpan(text: ordersState.orders[index]["shape"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: RichText(
+                                            text: TextSpan(
+                                          text: 'Фурнитура: ',
+                                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
+                                          children: <TextSpan>[TextSpan(text: ordersState.orders[index]["implement"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: RichText(
+                                            text: TextSpan(
+                                          text: 'Адрес: ',
+                                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: ordersState.orders[index]['address'],
+                                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
+                                            )
                                           ],
-                                        ),
-                                      ))),
-                            );
-                          },
-                        )
+                                        )),
+                                      ),
+                                    ],
+                                  ),
+                                ))),
+                      );
+                    },
+                  )
                 ],
               );
             }),

@@ -14,7 +14,7 @@ abstract class OrdersStateBase with Store {
 
   @observable
   List<dynamic> orders = [];
-  
+
   late List<dynamic> immutableorders;
 
   @observable
@@ -39,7 +39,7 @@ abstract class OrdersStateBase with Store {
   Future<void> deleteOrder(index) async {
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
-    Dio().delete('http://127.0.0.1:8000/api/v2/order/${orders[index]["id"]}/', options: Options(headers: {'Authorization': 'Token $token'}));
+    Dio().delete('http://127.0.0.1:8000/api/v2/order/?id=${orders[index]["id"]}', options: Options(headers: {'Authorization': 'Token $token'}));
   }
 
   @action
@@ -55,7 +55,7 @@ abstract class OrdersStateBase with Store {
   }
 
   @action
-  reverseOrders(){
+  reverseOrders() {
     orders = List.from(orders.reversed);
   }
 }

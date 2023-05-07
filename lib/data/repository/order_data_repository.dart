@@ -13,8 +13,8 @@ class OrderDataRepository extends OrderRepository {
   }
 
   @override
-  Future<dynamic> createOrder({required int shape, required int implement, required String typePay, required String typeDelivery, required int amountwindow, required int price, required String comment, required List<MultipartFile> files}) {
-    return apiUtil.createOrder(shape: shape, implement: implement, typeDelivery: typeDelivery, typePay: typePay, amountwindow: amountwindow, price: price, comment: comment, files: files);
+  Future<dynamic> createOrder({required int shape, required int implement,required String address, required String typePay, required String typeDelivery, required int amountwindow, required int price, required String comment, required List<MultipartFile> files}) {
+    return apiUtil.createOrder(shape: shape, implement: implement,address: address, typeDelivery: typeDelivery, typePay: typePay, amountwindow: amountwindow, price: price, comment: comment, files: files);
   }
 
   @override

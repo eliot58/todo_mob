@@ -10,4 +10,14 @@ class WorksDataRepository extends WorksRepository {
   Future<List<dynamic>> getWorks() {
     return apiUtil.getWorks();
   }
+
+  @override
+  Future<List<dynamic>> getQuantities() {
+    return apiUtil.getWorks();
+  }
+
+  @override
+  dynamic submitOrder({required int id}) {
+    return apiUtil.submitOrder(id: id);
+  }
 }

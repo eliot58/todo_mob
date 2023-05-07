@@ -102,7 +102,7 @@ class _CompanyState extends State<Company> {
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.only(right: 5),
-                                  child: SvgPicture.asset('assets/img/ico/location.svg'),
+                                  child: SvgPicture.asset('assets/img/location.svg'),
                                 ),
                                 Text(companyState.address, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
                               ],
@@ -112,7 +112,7 @@ class _CompanyState extends State<Company> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.only(right: 5),
-                                child: SvgPicture.asset('assets/img/ico/phone.svg'),
+                                child: SvgPicture.asset('assets/img/phone.svg'),
                               ),
                               Text(companyState.contactphone, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
                             ],

@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/custom_icons.dart';
+import 'package:todotodo/data/api/service/todo_service.dart';
 import 'package:todotodo/domain/state/order/order_state.dart';
 import 'package:todotodo/internal/dependencies/order_module.dart';
 import 'package:todotodo/presentation/auth/login.dart';
@@ -35,6 +36,8 @@ class _OrderState extends State<Order> {
 
   double _startPrice = 500;
   double _endPrice = 200000;
+
+  Map<String, String> delivery = {"0": "Адрес клиента", "1": "Мой склад", "2": "Самовывоз"};
 
   bool _new = true;
 
@@ -94,10 +97,8 @@ class _OrderState extends State<Order> {
                           GestureDetector(
                             onTap: () async {
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
-                              final SharedPreferences prefs = await _prefs;
-                              final String? token = prefs.getString('token');
-                              await prefs.remove('token');
-                              Dio().get('http://127.0.0.1:8000/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                              final service = TodoService();
+                              service.logout();
                             },
                             child: const Icon(Icons.exit_to_app),
                           )
@@ -122,7 +123,7 @@ class _OrderState extends State<Order> {
                               hintText: 'Search',
                               prefixIcon: const Icon(Icons.search),
                               suffixIcon: IconButton(
-                                icon: const Icon(CustomIcon.filter, color: Color(0xff080696)),
+                                icon: SvgPicture.asset('assets/img/filter.svg'),
                                 onPressed: () {
                                   showDialog(
                                       context: context,
@@ -282,7 +283,7 @@ class _OrderState extends State<Order> {
                                             text: TextSpan(
                                           text: 'Тип оплаты: ',
                                           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                          children: <TextSpan>[TextSpan(text: orderState.order['type_pay'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                          children: <TextSpan>[TextSpan(text: orderState.order['type_pay'] == 'C' ? "Карта" : "Безнал", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
                                         )),
                                       ),
                                       Padding(
@@ -291,7 +292,7 @@ class _OrderState extends State<Order> {
                                             text: TextSpan(
                                           text: 'Тип доставки: ',
                                           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                          children: <TextSpan>[TextSpan(text: orderState.order['type_delivery'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                          children: <TextSpan>[TextSpan(text: delivery[orderState.order['type_delivery']], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
                                         )),
                                       ),
                                       Padding(

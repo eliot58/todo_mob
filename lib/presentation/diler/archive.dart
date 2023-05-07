@@ -1,11 +1,10 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:todotodo/data/api/service/todo_service.dart';
 import 'package:todotodo/domain/state/archive/archive_state.dart';
 import 'package:todotodo/internal/dependencies/archive_module.dart';
 import 'package:todotodo/presentation/auth/login.dart';
@@ -23,8 +22,6 @@ class DilerArchive extends StatefulWidget {
 
 class _DilerArchiveState extends State<DilerArchive> {
   late ArchiveState archivesState;
-
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   void _bottomTab(int index) async {
     if (index == 0) {
@@ -81,10 +78,8 @@ class _DilerArchiveState extends State<DilerArchive> {
                           GestureDetector(
                             onTap: () async {
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
-                              final SharedPreferences prefs = await _prefs;
-                              final String? token = prefs.getString('token');
-                              await prefs.remove('token');
-                              Dio().get('http://127.0.0.1:8000/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                              final service = TodoService();
+                              service.logout();
                             },
                             child: const Icon(Icons.exit_to_app),
                           )
@@ -246,18 +241,9 @@ class _DilerArchiveState extends State<DilerArchive> {
                                           padding: const EdgeInsets.only(bottom: 12),
                                           child: RichText(
                                               text: TextSpan(
-                                            text: 'Количество КП: ',
+                                            text: 'Номер заказа: ',
                                             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                            children: <TextSpan>[TextSpan(text: archivesState.archives[index]["kpcount"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
-                                          )),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 12),
-                                          child: RichText(
-                                              text: TextSpan(
-                                            text: 'Желаемая цена: ',
-                                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                            children: <TextSpan>[TextSpan(text: archivesState.archives[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                            children: <TextSpan>[TextSpan(text: archivesState.archives[index]["order"]["id"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
                                           )),
                                         ),
                                         Padding(
@@ -277,7 +263,16 @@ class _DilerArchiveState extends State<DilerArchive> {
                                             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
                                             children: <TextSpan>[TextSpan(text: archivesState.archives[index]["implement"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
                                           )),
-                                        )
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 12),
+                                          child: RichText(
+                                              text: TextSpan(
+                                            text: 'Цена: ',
+                                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
+                                            children: <TextSpan>[TextSpan(text: archivesState.archives[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                          )),
+                                        ),
                                       ],
                                     ),
                                   ))),

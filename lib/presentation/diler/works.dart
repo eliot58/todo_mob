@@ -1,10 +1,10 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/custom_icons.dart';
+import 'package:todotodo/data/api/service/todo_service.dart';
 import 'package:todotodo/domain/state/works/works_state.dart';
 import 'package:todotodo/internal/dependencies/works_module.dart';
 import 'package:todotodo/presentation/auth/login.dart';
@@ -80,10 +80,8 @@ class _DilerWorksState extends State<DilerWorks> {
                           GestureDetector(
                             onTap: () async {
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
-                              final SharedPreferences prefs = await _prefs;
-                              final String? token = prefs.getString('token');
-                              await prefs.remove('token');
-                              Dio().get('http://127.0.0.1:8000/api/v1/auth/token/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+                              final service = TodoService();
+                              service.logout();
                             },
                             child: const Icon(Icons.exit_to_app),
                           )
@@ -105,7 +103,7 @@ class _DilerWorksState extends State<DilerWorks> {
                                     child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                                         child: ListTile(
-                                          trailing: Image.asset('assets/img/ico/folder.png'),
+                                          trailing: Image.asset('assets/img/folder.png'),
                                           subtitle: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: <Widget>[
@@ -117,18 +115,9 @@ class _DilerWorksState extends State<DilerWorks> {
                                                 padding: const EdgeInsets.only(bottom: 12),
                                                 child: RichText(
                                                     text: TextSpan(
-                                                  text: 'Количество КП: ',
+                                                  text: 'Номер заказа: ',
                                                   style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["kpcount"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
-                                                )),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(bottom: 12),
-                                                child: RichText(
-                                                    text: TextSpan(
-                                                  text: 'Желаемая цена: ',
-                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["order"]["id"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
                                                 )),
                                               ),
                                               Padding(
@@ -148,7 +137,16 @@ class _DilerWorksState extends State<DilerWorks> {
                                                   style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
                                                   children: <TextSpan>[TextSpan(text: worksState.works[index]["implement"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
                                                 )),
-                                              )
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(bottom: 12),
+                                                child: RichText(
+                                                    text: TextSpan(
+                                                  text: 'Цена: ',
+                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
+                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                                )),
+                                              ),
                                             ],
                                           ),
                                         ))),

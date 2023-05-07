@@ -259,6 +259,7 @@ class _OrderCreateState extends State<OrderCreate> {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   await orderState.createOrder();
+                                  if (!mounted) return;
                                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DilerOrders()));
                                 }
                               },

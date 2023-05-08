@@ -37,7 +37,7 @@ class ApiUtil {
   }
 
   Future<List<dynamic>> getQuantities() async {
-    final result = await todoService.getWorks();
+    final result = await todoService.getQuantities();
     return result;
   }
 
@@ -137,7 +137,7 @@ class ApiUtil {
   }
 
   Future<dynamic> submitOrder({required int id}) async {
-    final result = await todoService.getOrder(id);
+    final result = await todoService.submitOrder(id);
     return result;
   }
 }

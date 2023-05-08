@@ -1,11 +1,10 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/domain/state/works/works_state.dart';
 import 'package:todotodo/internal/dependencies/works_module.dart';
+import 'package:todotodo/presentation/provider/contacts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'archive.dart';
@@ -22,7 +21,6 @@ class ProviderWorks extends StatefulWidget {
 
 class _ProviderWorksState extends State<ProviderWorks> {
   late WorksState worksState;
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   void _bottomTab(int index) async {
     if (index == 0) {
@@ -35,6 +33,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProviderArchive()));
     } else if (index == 4) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProviderProfile()));
+    } else if (index == 5) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const Contacts()));
     }
   }
 
@@ -70,7 +70,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
               CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: const Text('Подписка')),
               CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: const Text('Статусы')),
               CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: const Text('Архив')),
-              CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль'))
+              CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль')),
+              CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: const Text('Контакты'))
             ]),
             backgroundColor: Colors.white,
             body: Observer(builder: (context) {
@@ -279,12 +280,12 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                                   alignment: Alignment.centerLeft,
                                                 ),
                                                 onPressed: () async {
-                                                  var url = Uri.parse('http://127.0.0.1:8000${worksState.works[index]["file"]}');
+                                                  var url = Uri.parse('http://127.0.0.1:8000${worksState.quantities[index]["file"]}');
                                                   if (!await launchUrl(url)) {
                                                     throw 'Could not launch $url';
                                                   }
                                                 },
-                                                child: Text(Uri.decodeFull(worksState.works[index]["file"].split("/").last), overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.blue))),
+                                                child: Text(Uri.decodeFull(worksState.quantities[index]["file"].split("/").last), overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.blue))),
                                           ),
                                         ],
                                       ),

@@ -26,4 +26,9 @@ class OrderDataRepository extends OrderRepository {
   Future<dynamic> getItems() {
     return apiUtil.getItems();
   }
+
+  @override
+  Future<dynamic> submitOrder({required int id}) {
+    return apiUtil.submitOrder(id: id);
+  }
 }

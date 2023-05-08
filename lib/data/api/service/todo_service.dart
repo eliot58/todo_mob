@@ -159,13 +159,20 @@ class TodoService {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
     await prefs.remove('token');
-    _dio.get('/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
+    _dio.delete('/logout/', options: Options(headers: {'Authorization': 'Token $token'}));
   }
 
   Future<dynamic> submitOrder(int id) async {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
-    final response = await _dio.get('/provider-submit/$id/', options: Options(headers: {'Authorization': 'Token $token'}));
+    final response = await _dio.get('/submit/$id/', options: Options(headers: {'Authorization': 'Token $token'}));
+    return response.data;
+  }
+
+  Future<dynamic> isDiler() async {
+    final SharedPreferences prefs = await _prefs;
+    final String? token = prefs.getString('token');
+    final response = await _dio.get('/isdiler/', options: Options(headers: {'Authorization': 'Token $token'}));
     return response.data;
   }
 }

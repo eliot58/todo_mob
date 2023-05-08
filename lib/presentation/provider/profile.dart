@@ -5,6 +5,7 @@ import 'package:multiselect/multiselect.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/domain/state/provider/profile_state.dart';
 import 'package:todotodo/internal/dependencies/provider_profile_module.dart';
+import 'package:todotodo/presentation/provider/contacts.dart';
 
 import 'archive.dart';
 import 'balance.dart';
@@ -51,6 +52,8 @@ class _ProviderProfileState extends State<ProviderProfile> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProviderArchive()));
     } else if (index == 4) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProviderProfile()));
+    } else if (index == 5) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const Contacts()));
     }
   }
 
@@ -63,7 +66,8 @@ class _ProviderProfileState extends State<ProviderProfile> {
             CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: const Text('Подписка')),
             CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: const Text('Статусы')),
             CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: const Text('Архив')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль'))
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль')),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: const Text('Контакты'))
           ]),
           body: SingleChildScrollView(
               child: Form(

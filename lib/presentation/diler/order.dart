@@ -335,9 +335,7 @@ class _OrderState extends State<Order> {
                                           onPressed: orderState.order["quantity_set"][index]["isresponse"]
                                               ? null
                                               : () async {
-                                                  final SharedPreferences prefs = await _prefs;
-                                                  final String? token = prefs.getString('token');
-                                                  Dio().get('http://127.0.0.1:8000/api/v1/response/${orderState.order["quantity_set"][index]["id"]}/', options: Options(headers: {'Authorization': 'Token $token'}));
+                                                  orderState.submitOrder(id: orderState.order["quantity_set"][index]["id"]);
                                                   setState(() {
                                                     orderState.order["quantity_set"][index]["isresponse"] = true;
                                                   });
@@ -356,9 +354,9 @@ class _OrderState extends State<Order> {
                                                   child: TextButton(
                                                       style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(50, 30), tapTargetSize: MaterialTapTargetSize.shrinkWrap, alignment: Alignment.centerLeft),
                                                       onPressed: () async {
-                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Company(id: orderState.order["quantity_set"][index]["author_id"])));
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Company(id: orderState.order["quantity_set"][index]["author"])));
                                                       },
-                                                      child: Text(orderState.order["quantity_set"][index]["author_company"], overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.blue))),
+                                                      child: Text(orderState.order["quantity_set"][index]["author"], overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.blue))),
                                                 ),
                                               ],
                                             ),
@@ -399,12 +397,12 @@ class _OrderState extends State<Order> {
                                                   child: TextButton(
                                                       style: TextButton.styleFrom(padding: EdgeInsets.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap, alignment: Alignment.centerLeft),
                                                       onPressed: () async {
-                                                        var url = Uri.parse('http://127.0.0.1:8000${orderState.order["quantity_set"][index]["fileurl"]}');
+                                                        var url = Uri.parse('http://127.0.0.1:8000${orderState.order["quantity_set"][index]["file"]}');
                                                         if (!await launchUrl(url)) {
                                                           throw 'Could not launch $url';
                                                         }
                                                       },
-                                                      child: Text(Uri.decodeFull(orderState.order["quantity_set"][index]["file"]), overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.blue))),
+                                                      child: Text(Uri.decodeFull(orderState.order["quantity_set"][index]["file"].split("/").last), overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.blue))),
                                                 ),
                                               ],
                                             ),
@@ -415,7 +413,7 @@ class _OrderState extends State<Order> {
                                                 text: TextSpan(
                                               text: 'Цена: ',
                                               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                              children: <TextSpan>[TextSpan(text: orderState.order["kp"][index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                              children: <TextSpan>[TextSpan(text: orderState.order["quantity_set"][index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
                                             )),
                                           ),
                                         ],

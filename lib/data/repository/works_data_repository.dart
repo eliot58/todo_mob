@@ -13,7 +13,7 @@ class WorksDataRepository extends WorksRepository {
 
   @override
   Future<List<dynamic>> getQuantities() {
-    return apiUtil.getWorks();
+    return apiUtil.getQuantities();
   }
 
   @override

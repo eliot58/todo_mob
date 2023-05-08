@@ -8,6 +8,7 @@ import 'package:todotodo/domain/state/orders/orders_state.dart';
 import 'package:todotodo/internal/dependencies/orders_module.dart';
 import 'package:todotodo/presentation/auth/login.dart';
 import 'package:todotodo/presentation/provider/balance.dart';
+import 'package:todotodo/presentation/provider/contacts.dart';
 import 'package:todotodo/presentation/provider/works.dart';
 import 'package:todotodo/data/api/service/todo_service.dart';
 import 'archive.dart';
@@ -49,6 +50,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProviderArchive()));
     } else if (index == 4) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const ProviderProfile()));
+    } else if (index == 5) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const Contacts()));
     }
   }
 
@@ -61,7 +64,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
           CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: const Text('Подписка')),
           CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: const Text('Статусы')),
           CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: const Text('Архив')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль'))
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль')),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: const Text('Контакты'))
         ]),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(

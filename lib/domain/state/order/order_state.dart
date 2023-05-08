@@ -115,4 +115,9 @@ abstract class OrderStateBase with Store {
   reverseQuantities() {
     order = List.from(order["quantity_set"].reversed);
   }
+  
+  @action
+  Future<void> submitOrder({required int id}) async {
+    await orderRepository.submitOrder(id: id);
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/data/api/service/todo_service.dart';
 import 'package:todotodo/presentation/auth/login.dart';
@@ -24,5 +25,11 @@ void main() async {
       homepage = const Login();
     }
   }
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: homepage));
+  runApp(ScreenUtilInit(
+    designSize: const Size(375, 812),
+    builder: (context, child) {
+      return MaterialApp(debugShowCheckedModeBanner: false, home: child);
+    },
+    child: homepage,
+  ));
 }

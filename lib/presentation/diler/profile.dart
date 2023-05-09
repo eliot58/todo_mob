@@ -1,6 +1,7 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/domain/state/diler/profile_state.dart';
@@ -58,11 +59,11 @@ class _DilerProfileState extends State<DilerProfile> {
     return SafeArea(
       child: Scaffold(
           bottomNavigationBar: CustomNavigationBar(onTap: _bottomTab, unSelectedColor: const Color(0xff8A8A8A), selectedColor: const Color(0xff15CE73), currentIndex: 4, items: <CustomNavigationBarItem>[
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: const Text('Заказы')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.works), title: const Text('В работе')),
-            CustomNavigationBarItem(icon: SvgPicture.asset('assets/img/create.svg'), title: const Text('Создать')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: const Text('Архив')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.profile), title: const Text('Профиль'))
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: Text('Заказы', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.works), title: Text('В работе', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: SvgPicture.asset('assets/img/create.svg'), title: Text('Создать', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: Text('Архив', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.profile), title: Text('Профиль', style: TextStyle(fontSize: 10.sp)))
           ]),
           body: SingleChildScrollView(
               child: Form(
@@ -76,10 +77,10 @@ class _DilerProfileState extends State<DilerProfile> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          const Center(
+                          Center(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 60, bottom: 30),
-                              child: Text('Мой профиль', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                              padding: const EdgeInsets.only(top: 60, bottom: 30),
+                              child: Text('Мой профиль', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600)),
                             ),
                           ),
                           Padding(
@@ -90,7 +91,7 @@ class _DilerProfileState extends State<DilerProfile> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[Text(profileState.fullNameController.text, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)), Text(profileState.dropdownvalue, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500))],
+                                      children: <Widget>[Text(profileState.fullNameController.text, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600)), Text(profileState.dropdownvalue, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500))],
                                     ),
                                   )
                                 ],
@@ -104,7 +105,7 @@ class _DilerProfileState extends State<DilerProfile> {
                             child: TextFormField(
                               controller: profileState.companyController,
                               obscureText: false,
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.sp),
                               decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -123,7 +124,7 @@ class _DilerProfileState extends State<DilerProfile> {
                             child: TextFormField(
                               controller: profileState.fullNameController,
                               obscureText: false,
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.sp),
                               decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -143,7 +144,7 @@ class _DilerProfileState extends State<DilerProfile> {
                               controller: profileState.phoneController,
                               obscureText: false,
                               keyboardType: TextInputType.phone,
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.sp),
                               decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                               validator: (value) {
                                 final phoneRegExp = RegExp(r"^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$");
@@ -166,7 +167,7 @@ class _DilerProfileState extends State<DilerProfile> {
                               controller: profileState.emailController,
                               obscureText: false,
                               keyboardType: TextInputType.emailAddress,
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.sp),
                               decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                               validator: (value) {
                                 final emailRegExp = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -189,7 +190,7 @@ class _DilerProfileState extends State<DilerProfile> {
                               controller: profileState.addressController,
                               obscureText: false,
                               keyboardType: TextInputType.streetAddress,
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.sp),
                               decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -229,8 +230,8 @@ class _DilerProfileState extends State<DilerProfile> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 30),
                             child: SizedBox(
-                              width: 400,
-                              height: 50,
+                              width: 400.w,
+                              height: 50.h,
                               child: ElevatedButton(
                                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color(0xff15CE73))),
                                 onPressed: () async {
@@ -242,25 +243,25 @@ class _DilerProfileState extends State<DilerProfile> {
                                           return Dialog(
                                             insetPadding: const EdgeInsets.all(20),
                                             child: SizedBox(
-                                                width: 400,
-                                                height: 400,
+                                                width: 400.w,
+                                                height: 400.h,
                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: <Widget>[
-                                                    const Text(
+                                                    Text(
                                                       'Профиль сохранён',
-                                                      style: TextStyle(color: Color(0xff080696), fontSize: 16, fontWeight: FontWeight.w700),
+                                                      style: TextStyle(color: const Color(0xff080696), fontSize: 16.sp, fontWeight: FontWeight.w700),
                                                     ),
                                                     Image.asset('assets/img/check.png'),
                                                     SizedBox(
-                                                      width: 400,
-                                                      height: 50,
+                                                      width: 400.w,
+                                                      height: 50.h,
                                                       child: ElevatedButton(
                                                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color(0xff15CE73))),
                                                         onPressed: () {
                                                           Navigator.pop(context);
                                                         },
-                                                        child: const Text('Закрыть', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                                                        child: Text('Закрыть', style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w600)),
                                                       ),
                                                     )
                                                   ],
@@ -269,7 +270,7 @@ class _DilerProfileState extends State<DilerProfile> {
                                         });
                                   }
                                 },
-                                child: const Text('Подтвердить', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                                child: Text('Подтвердить', style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w600)),
                               ),
                             ),
                           )

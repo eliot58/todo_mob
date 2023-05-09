@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todotodo/domain/state/company/company_state.dart';
 import 'package:todotodo/internal/dependencies/company_module.dart';
@@ -65,7 +66,7 @@ class _CompanyState extends State<Company> {
                               Navigator.pop(context);
                             },
                             icon: const Icon(Icons.arrow_back_ios)),
-                        const Expanded(flex: 1, child: Text('Профиль компании', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600), textAlign: TextAlign.center)),
+                        Expanded(flex: 1, child: Text('Профиль компании', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600), textAlign: TextAlign.center)),
                       ],
                     ),
                   ),
@@ -87,9 +88,9 @@ class _CompanyState extends State<Company> {
                                     children: <Widget>[
                                       Padding(
                                         padding: const EdgeInsets.only(bottom: 20),
-                                        child: Text(companyState.company, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                                        child: Text(companyState.company, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600)),
                                       ),
-                                      Text('Руководитель : ${companyState.contactentity}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400))
+                                      Text('Руководитель : ${companyState.contactentity}', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400))
                                     ],
                                   ),
                                 )
@@ -104,7 +105,7 @@ class _CompanyState extends State<Company> {
                                   padding: const EdgeInsets.only(right: 5),
                                   child: SvgPicture.asset('assets/img/location.svg'),
                                 ),
-                                Text(companyState.address, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
+                                Text(companyState.address, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                               ],
                             ),
                           ),
@@ -114,7 +115,7 @@ class _CompanyState extends State<Company> {
                                 padding: const EdgeInsets.only(right: 5),
                                 child: SvgPicture.asset('assets/img/phone.svg'),
                               ),
-                              Text(companyState.contactphone, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
+                              Text(companyState.contactphone, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                             ],
                           ),
                         ],
@@ -129,7 +130,7 @@ class _CompanyState extends State<Company> {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20),
-                          child: Text('Менеджер : ${companyState.serviceentity}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                          child: Text('Менеджер : ${companyState.serviceentity}', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 15),
@@ -139,7 +140,7 @@ class _CompanyState extends State<Company> {
                                 padding: const EdgeInsets.only(right: 5),
                                 child: SvgPicture.asset('assets/img/ico/phone.svg'),
                               ),
-                              Text(companyState.servicephone, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
+                              Text(companyState.servicephone, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                             ],
                           ),
                         ),
@@ -149,7 +150,7 @@ class _CompanyState extends State<Company> {
                               padding: const EdgeInsets.only(right: 5),
                               child: SvgPicture.asset('assets/img/ico/mail.svg'),
                             ),
-                            Text(companyState.serviceemail, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
+                            Text(companyState.serviceemail, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                           ],
                         ),
                       ]),
@@ -165,17 +166,17 @@ class _CompanyState extends State<Company> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: Row(
-                            children: <Widget>[const Text('Профили:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.shapes, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)))],
+                            children: <Widget>[Text('Профили:', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.shapes, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: Row(
-                            children: <Widget>[const Text('Фурнитуры:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.implements, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)))],
+                            children: <Widget>[Text('Фурнитуры:', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.implements, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
                           ),
                         ),
                         Row(
-                          children: <Widget>[const Text('Регионы:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.regions, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)))],
+                          children: <Widget>[Text('Регионы:', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.regions, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
                         ),
                       ]),
                     )),
@@ -183,7 +184,7 @@ class _CompanyState extends State<Company> {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.only(bottom: 16),
-                    child: Card(child: Padding(padding: const EdgeInsets.all(10), child: Text(companyState.description, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)))),
+                    child: Card(child: Padding(padding: const EdgeInsets.all(10), child: Text(companyState.description, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500)))),
                   ),
                 ],
               );

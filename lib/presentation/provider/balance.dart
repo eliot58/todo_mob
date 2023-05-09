@@ -1,6 +1,7 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/data/api/service/todo_service.dart';
 import 'package:todotodo/domain/state/balance/price_state.dart';
@@ -51,12 +52,12 @@ class _BalanceState extends State<Balance> {
     return SafeArea(
       child: Scaffold(
           bottomNavigationBar: CustomNavigationBar(onTap: _bottomTab, currentIndex: 1, unSelectedColor: const Color(0xff8A8A8A), selectedColor: const Color(0xff080696), items: <CustomNavigationBarItem>[
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: const Text('Заказы')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: const Text('Подписка')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: const Text('Статусы')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: const Text('Архив')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль')),
-            CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: const Text('Контакты'))
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: Text('Заказы', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: Text('Подписка', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: Text('Статусы', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: Text('Архив', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: Text('Профиль', style: TextStyle(fontSize: 10.sp))),
+            CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: Text('Контакты', style: TextStyle(fontSize: 10.sp)))
           ]),
           body: Padding(
             padding: const EdgeInsets.only(left: 15, right: 15, top: 100),
@@ -69,9 +70,9 @@ class _BalanceState extends State<Balance> {
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(right: 20),
-                      child: Image.asset('assets/img/provider-logo.png', width: 43, height: 43),
+                      child: Image.asset('assets/img/provider-logo.png', width: 43.w, height: 43.h),
                     ),
-                    const Text('Todotodo.поставщик', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xff080696))),
+                    Text('Todotodo.поставщик', style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700, color: const Color(0xff080696))),
                     GestureDetector(
                       onTap: () async {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
@@ -94,18 +95,18 @@ class _BalanceState extends State<Balance> {
                                 width: double.infinity,
                                 color: const Color(0xffEBEBEB),
                                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                                child: Text(pricesState.prices[index]['title'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+                                child: Text(pricesState.prices[index]['title'], textAlign: TextAlign.center, style: TextStyle(fontSize: 16.sp)),
                               ),
                               Center(
                                 child: Column(
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 5),
-                                      child: Text(pricesState.prices[index]['price'].toString(), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff080696))),
+                                      child: Text(pricesState.prices[index]['price'].toString(), style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w600, color: const Color(0xff080696))),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                      child: Text(pricesState.prices[index]['description'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
+                                      child: Text(pricesState.prices[index]['description'], textAlign: TextAlign.center, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400)),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 5),

@@ -9,7 +9,7 @@ import 'package:todotodo/data/api/request/quantity_body.dart';
 class TodoService {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  static const baseURL = 'http://127.0.0.1:8000/api/v2';
+  static const baseURL = 'https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v2';
 
   final Dio _dio = Dio(
     BaseOptions(baseUrl: baseURL),

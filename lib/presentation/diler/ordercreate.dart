@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todotodo/domain/state/order/order_state.dart';
 import 'package:todotodo/internal/dependencies/order_module.dart';
 import 'package:todotodo/presentation/common.dart';
@@ -49,11 +50,11 @@ class _OrderCreateState extends State<OrderCreate> {
                                     Navigator.pop(context);
                                   },
                                   icon: const Icon(Icons.arrow_back_ios)),
-                              const Expanded(
+                              Expanded(
                                   flex: 1,
                                   child: Text(
                                     'Создать заказ',
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                                     textAlign: TextAlign.center,
                                   )),
                             ],
@@ -75,7 +76,7 @@ class _OrderCreateState extends State<OrderCreate> {
                                       child: Text(item),
                                     );
                                   }).toList(),
-                                  decoration: InputDecoration(hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                                  decoration: InputDecoration(hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                                   onChanged: (dynamic newValue) {
                                     setState(() {
                                       orderState.optshape = newValue!;
@@ -101,7 +102,7 @@ class _OrderCreateState extends State<OrderCreate> {
                                       child: Text(item),
                                     );
                                   }).toList(),
-                                  decoration: InputDecoration(hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                                  decoration: InputDecoration(hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                                   onChanged: (dynamic newValue) {
                                     setState(() {
                                       orderState.optimpl = newValue!;
@@ -118,8 +119,8 @@ class _OrderCreateState extends State<OrderCreate> {
                             child: TextFormField(
                               controller: orderState.addressController,
                               obscureText: false,
-                              style: const TextStyle(fontSize: 16),
-                              decoration: InputDecoration(hintText: 'Введите адрес доставки', hintStyle: const TextStyle(fontSize: 16, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                              style: TextStyle(fontSize: 16.sp),
+                              decoration: InputDecoration(hintText: 'Введите адрес доставки', hintStyle: TextStyle(fontSize: 16.sp, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Заполните поле';
@@ -145,7 +146,7 @@ class _OrderCreateState extends State<OrderCreate> {
                                       child: Text(item),
                                     );
                                   }).toList(),
-                                  decoration: InputDecoration(hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                                  decoration: InputDecoration(hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       orderState.optpay = newValue!;
@@ -171,7 +172,7 @@ class _OrderCreateState extends State<OrderCreate> {
                                       child: Text(item),
                                     );
                                   }).toList(),
-                                  decoration: InputDecoration(hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                                  decoration: InputDecoration(hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       orderState.optdel = newValue!;
@@ -189,8 +190,8 @@ class _OrderCreateState extends State<OrderCreate> {
                               controller: orderState.windowCountController,
                               obscureText: false,
                               keyboardType: TextInputType.number,
-                              style: const TextStyle(fontSize: 16),
-                              decoration: InputDecoration(hintText: 'Количество окон', hintStyle: const TextStyle(fontSize: 16, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                              style: TextStyle(fontSize: 16.sp),
+                              decoration: InputDecoration(hintText: 'Количество окон', hintStyle: TextStyle(fontSize: 16.sp, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Заполните поле';
@@ -208,8 +209,8 @@ class _OrderCreateState extends State<OrderCreate> {
                               controller: orderState.priceController,
                               obscureText: false,
                               keyboardType: TextInputType.number,
-                              style: const TextStyle(fontSize: 16),
-                              decoration: InputDecoration(hintText: 'Желаемая цена', hintStyle: const TextStyle(fontSize: 16, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                              style: TextStyle(fontSize: 16.sp),
+                              decoration: InputDecoration(hintText: 'Желаемая цена', hintStyle: TextStyle(fontSize: 16.sp, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Заполните поле';
@@ -228,8 +229,8 @@ class _OrderCreateState extends State<OrderCreate> {
                               maxLines: 10,
                               controller: orderState.commentController,
                               obscureText: false,
-                              style: const TextStyle(fontSize: 16),
-                              decoration: InputDecoration(hintText: 'Комментарий к заказу', hintStyle: const TextStyle(fontSize: 16, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                              style: TextStyle(fontSize: 16.sp),
+                              decoration: InputDecoration(hintText: 'Комментарий к заказу', hintStyle: TextStyle(fontSize: 16.sp, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                             ),
                           ),
                         ),
@@ -263,7 +264,7 @@ class _OrderCreateState extends State<OrderCreate> {
                                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DilerOrders()));
                                 }
                               },
-                              child: const Text('Подтвердить', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                              child: Text('Подтвердить', style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w600)),
                             ),
                           ),
                         )

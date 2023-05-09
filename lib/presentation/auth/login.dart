@@ -7,6 +7,7 @@ import 'package:todotodo/presentation/auth/register.dart';
 import 'package:todotodo/presentation/diler/orders.dart';
 import 'package:todotodo/presentation/provider/orders.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -50,9 +51,9 @@ class _LoginState extends State<Login> {
                   Column(
                     children: <Widget>[
                       _logo(),
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 25),
-                        child: Text('Войти', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700)),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25),
+                        child: Text('Войти', style: TextStyle(fontSize: 25.sp, fontWeight: FontWeight.w700)),
                       ),
                       Padding(
                           padding: const EdgeInsets.only(bottom: 15),
@@ -60,9 +61,9 @@ class _LoginState extends State<Login> {
                             padding: const EdgeInsets.only(left: 15, right: 15),
                             child: TextFormField(
                               controller: _emailController,
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.sp),
                               decoration: InputDecoration(
-                                  hintText: 'email address', prefixIcon: const Icon(CustomIcon.sms, color: Color(0xff1C1C1E)), hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                                  hintText: 'email address', prefixIcon: const Icon(CustomIcon.sms, color: Color(0xff1C1C1E)), hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                             ),
                           )),
                       Padding(
@@ -72,7 +73,7 @@ class _LoginState extends State<Login> {
                             child: TextFormField(
                               controller: _passwordController,
                               obscureText: loginState.passwordObscure,
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.sp),
                               validator: (value) {
                                 return loginState.passwordvalidator;
                               },
@@ -83,7 +84,7 @@ class _LoginState extends State<Login> {
                                     onPressed: loginState.obscureChange,
                                   ),
                                   prefixIcon: const Icon(CustomIcon.lock, color: Color(0xff1C1C1E)),
-                                  hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff1C1C1E)),
+                                  hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xff1C1C1E)),
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                             ),
                           )),
@@ -102,7 +103,7 @@ class _LoginState extends State<Login> {
                                       });
                                     },
                                   ),
-                                  const Text('Запомнить меня', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+                                  Text('Запомнить меня', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400)),
                                 ],
                               ),
                               TextButton(
@@ -112,7 +113,7 @@ class _LoginState extends State<Login> {
                                       throw 'Could not launch $url';
                                     }
                                   },
-                                  child: const Text('Забыли пароль?', style: TextStyle(fontSize: 14, color: Color(0xff15CE73), fontWeight: FontWeight.w600)))
+                                  child: Text('Забыли пароль?', style: TextStyle(fontSize: 14.sp, color: const Color(0xff15CE73), fontWeight: FontWeight.w600)))
                             ]),
                           )),
                       Container(
@@ -123,19 +124,19 @@ class _LoginState extends State<Login> {
                           child: ElevatedButton(
                             style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color(0xff15CE73))),
                             onPressed: _login,
-                            child: const Text('Войти', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                            child: Text('Войти', style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w600)),
                           ),
                         ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          const Text('Ещё нет аккаунта?', style: TextStyle(color: Color(0xff1C1C1E), fontSize: 14, fontWeight: FontWeight.w400)),
+                          Text('Ещё нет аккаунта?', style: TextStyle(color: const Color(0xff1C1C1E), fontSize: 14.sp, fontWeight: FontWeight.w400)),
                           TextButton(
                               onPressed: () {
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Register()));
                               },
-                              child: const Text('Зарегистрироваться', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73))))
+                              child: Text('Зарегистрироваться', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff15CE73))))
                         ],
                       )
                     ],

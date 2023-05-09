@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todotodo/domain/state/register/register_state.dart';
 import 'package:todotodo/internal/dependencies/register_module.dart';
 import 'package:todotodo/presentation/auth/login.dart';
@@ -57,11 +58,11 @@ class _RegisterState extends State<Register> {
                           Column(
                             children: <Widget>[
                               _logo(),
-                              const Padding(
-                                padding: EdgeInsets.only(bottom: 25),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 25),
                                 child: Text('Зарегистрироваться',
                                     style: TextStyle(
-                                        fontSize: 25,
+                                        fontSize: 25.sp,
                                         fontWeight: FontWeight.w700)),
                               ),
                               Padding(
@@ -84,10 +85,10 @@ class _RegisterState extends State<Register> {
                                           decoration: InputDecoration(
                                               filled: true,
                                               fillColor: Colors.white,
-                                              hintStyle: const TextStyle(
-                                                  fontSize: 16,
+                                              hintStyle: TextStyle(
+                                                  fontSize: 16.sp,
                                                   fontWeight: FontWeight.w400,
-                                                  color: Color(0xff1C1C1E)),
+                                                  color: const Color(0xff1C1C1E)),
                                               border: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
@@ -111,7 +112,7 @@ class _RegisterState extends State<Register> {
                                     child: TextFormField(
                                       controller: _fullNameController,
                                       obscureText: false,
-                                      style: const TextStyle(fontSize: 16),
+                                      style: TextStyle(fontSize: 16.sp),
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Введите ФИО';
@@ -120,10 +121,10 @@ class _RegisterState extends State<Register> {
                                       },
                                       decoration: InputDecoration(
                                           hintText: 'Введите ФИО',
-                                          hintStyle: const TextStyle(
-                                              fontSize: 16,
+                                          hintStyle: TextStyle(
+                                              fontSize: 16.sp,
                                               fontWeight: FontWeight.w400,
-                                              color: Color(0xff1C1C1E)),
+                                              color: const Color(0xff1C1C1E)),
                                           border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8))),
@@ -137,16 +138,16 @@ class _RegisterState extends State<Register> {
                                     child: TextFormField(
                                       controller: _phoneController,
                                       obscureText: false,
-                                      style: const TextStyle(fontSize: 16),
+                                      style: TextStyle(fontSize: 16.sp),
                                       validator: (value) {
                                         return registerState.phonevalidator;
                                       },
                                       decoration: InputDecoration(
                                           hintText: 'Введите номер телефона',
-                                          hintStyle: const TextStyle(
-                                              fontSize: 16,
+                                          hintStyle: TextStyle(
+                                              fontSize: 16.sp,
                                               fontWeight: FontWeight.w400,
-                                              color: Color(0xff1C1C1E)),
+                                              color: const Color(0xff1C1C1E)),
                                           border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8))),
@@ -160,16 +161,16 @@ class _RegisterState extends State<Register> {
                                     child: TextFormField(
                                       controller: _emailController,
                                       obscureText: false,
-                                      style: const TextStyle(fontSize: 16),
+                                      style: TextStyle(fontSize: 16.sp),
                                       validator: (value) {
                                         return registerState.uservalidator;
                                       },
                                       decoration: InputDecoration(
                                           hintText: 'Введите E-mail',
-                                          hintStyle: const TextStyle(
-                                              fontSize: 16,
+                                          hintStyle: TextStyle(
+                                              fontSize: 16.sp,
                                               fontWeight: FontWeight.w400,
-                                              color: Color(0xff1C1C1E)),
+                                              color: const Color(0xff1C1C1E)),
                                           border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8))),
@@ -185,11 +186,11 @@ class _RegisterState extends State<Register> {
                                                 builder: (context) =>
                                                     const Privacy()));
                                       },
-                                      child: const Text(
+                                      child: Text(
                                           'Пользовательское соглашение',
                                           style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color.fromARGB(
+                                              fontSize: 12.sp,
+                                              color: const Color.fromARGB(
                                                   255, 41, 38, 38),
                                               fontWeight: FontWeight.w400)))),
                               Padding(
@@ -204,10 +205,10 @@ class _RegisterState extends State<Register> {
                                             MaterialStateProperty.all(
                                                 const Color(0xff15CE73))),
                                     onPressed: _register,
-                                    child: const Text('Зарегистрироваться',
+                                    child: Text('Зарегистрироваться',
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 18,
+                                            fontSize: 18.sp,
                                             fontWeight: FontWeight.w600)),
                                   ),
                                 ),
@@ -215,10 +216,10 @@ class _RegisterState extends State<Register> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  const Text('Есть аккаунт?',
+                                  Text('Есть аккаунт?',
                                       style: TextStyle(
-                                          color: Color(0xff1C1C1E),
-                                          fontSize: 14,
+                                          color: const Color(0xff1C1C1E),
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.w400)),
                                   TextButton(
                                       onPressed: () {
@@ -228,11 +229,11 @@ class _RegisterState extends State<Register> {
                                                 builder: (context) =>
                                                     const Login()));
                                       },
-                                      child: const Text('Войти',
+                                      child: Text('Войти',
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w400,
-                                              color: Color(0xff15CE73))))
+                                              color: const Color(0xff15CE73))))
                                 ],
                               )
                             ],
@@ -294,18 +295,18 @@ class _PrivacyState extends State<Privacy> {
                       ),
                       RichText(
                           textAlign: TextAlign.center,
-                          text: const TextSpan(
+                          text: TextSpan(
                             text: 'Условия использования\nсервиса',
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black),
                             children: <TextSpan>[
                               TextSpan(
                                   text: " Todotodo",
                                   style: TextStyle(
-                                      color: Color(0xff15CE73),
-                                      fontSize: 16,
+                                      color: const Color(0xff15CE73),
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w400))
                             ],
                           ))
@@ -354,10 +355,10 @@ class SuccesReg extends StatelessWidget {
         body: Center(
             child: Column(children: <Widget>[
           _logo(),
-          const Text(
+          Text(
               'Вы успешно прошли регистрацию пароль отпрален на указанный вами E-mail',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500)),
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: ElevatedButton(
@@ -368,10 +369,10 @@ class SuccesReg extends StatelessWidget {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const Login()));
               },
-              child: const Text('Войти',
+              child: Text('Войти',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w600)),
             ),
           ),
@@ -397,9 +398,9 @@ class LoseReg extends StatelessWidget {
         body: Center(
             child: Column(children: <Widget>[
           _logo(),
-          const Text('Не удалось пройти регистрацию попробуйте снова',
+          Text('Не удалось пройти регистрацию попробуйте снова',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500)),
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: ElevatedButton(
@@ -410,10 +411,10 @@ class LoseReg extends StatelessWidget {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const Register()));
               },
-              child: const Text('Регистрация',
+              child: Text('Регистрация',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w600)),
             ),
           ),

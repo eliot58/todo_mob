@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:todotodo/domain/state/quantity/quantity_state.dart';
@@ -63,7 +64,7 @@ class _ProviderSendState extends State<ProviderSend> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
-                    child: Text('${quantityState.price} рублей x ${quantityState.countWindow}', style: const TextStyle(color: Color(0xff15CE73), fontSize: 20, fontWeight: FontWeight.w600)),
+                    child: Text('${quantityState.price} рублей x ${quantityState.countWindow}', style: TextStyle(color: const Color(0xff15CE73), fontSize: 20.sp, fontWeight: FontWeight.w600)),
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,11 +186,11 @@ class _ProviderSendState extends State<ProviderSend> {
                       decoration: InputDecoration(filled: true, fillColor: Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
                     child: Text('Профиль',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                         )),
                   ),
@@ -207,7 +208,7 @@ class _ProviderSendState extends State<ProviderSend> {
                               child: Text(item),
                             );
                           }).toList(),
-                          decoration: InputDecoration(filled: true, fillColor: Colors.white, hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                          decoration: InputDecoration(filled: true, fillColor: Colors.white, hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                           onChanged: (dynamic newValue) {
                             setState(() {
                               quantityState.optshape = newValue!;
@@ -216,11 +217,11 @@ class _ProviderSendState extends State<ProviderSend> {
                           validator: (value) => value == 'Выберите профиль' ? 'Выберите профиль' : null,
                         ),
                       )),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
                     child: Text('Фурнитура',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                         )),
                   ),
@@ -238,7 +239,7 @@ class _ProviderSendState extends State<ProviderSend> {
                               child: Text(item),
                             );
                           }).toList(),
-                          decoration: InputDecoration(filled: true, fillColor: Colors.white, hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                          decoration: InputDecoration(filled: true, fillColor: Colors.white, hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: const Color(0xff1C1C1E)), border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                           onChanged: (dynamic newValue) {
                             setState(() {
                               quantityState.optimpl = newValue!;
@@ -247,11 +248,11 @@ class _ProviderSendState extends State<ProviderSend> {
                           validator: (value) => value == 'Выберите фурнитуру' ? 'Выберите фурнитуру' : null,
                         ),
                       )),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
                     child: Text('Стоимость',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                         )),
                   ),
@@ -260,7 +261,7 @@ class _ProviderSendState extends State<ProviderSend> {
                     child: TextFormField(
                       controller: quantityState.priceController,
                       obscureText: false,
-                      style: const TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16.sp),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Заполните поле';
@@ -278,7 +279,7 @@ class _ProviderSendState extends State<ProviderSend> {
                       controller: quantityState.commentController,
                       obscureText: false,
                       style: const TextStyle(fontSize: 16),
-                      decoration: InputDecoration(hintText: 'Комментарий к заказу', hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff8391A1)), filled: true, fillColor: Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                      decoration: InputDecoration(hintText: 'Комментарий к заказу', hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: const Color(0xff8391A1)), filled: true, fillColor: Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Заполните поле';
@@ -313,7 +314,7 @@ class _ProviderSendState extends State<ProviderSend> {
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProviderWorks()));
                           }
                         },
-                        child: const Text('Откликнуться', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                        child: Text('Откликнуться', style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w600)),
                       ),
                     ),
                   ),

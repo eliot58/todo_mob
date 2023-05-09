@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomImageFormField extends StatefulWidget {
   const CustomImageFormField({
@@ -78,7 +79,7 @@ class _CustomImageFormFieldState extends State<CustomImageFormField> {
                         formFieldState.errorText!,
                         style: TextStyle(
                             fontStyle: FontStyle.normal,
-                            fontSize: 13,
+                            fontSize: 13.sp,
                             color: Colors.red[700],
                             height: 0.5),
                       ),
@@ -88,7 +89,7 @@ class _CustomImageFormFieldState extends State<CustomImageFormField> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20),
-                  child: Text(filename, style: const TextStyle(color: Color(0xff080696), fontSize: 16, fontWeight: FontWeight.w400)),
+                  child: Text(filename, style: TextStyle(color: const Color(0xff080696), fontSize: 16.sp, fontWeight: FontWeight.w400)),
                 ),
               )
             ],
@@ -177,7 +178,7 @@ class _CustomImagesFormFieldState extends State<CustomImagesFormField> {
                         formFieldState.errorText!,
                         style: TextStyle(
                             fontStyle: FontStyle.normal,
-                            fontSize: 13,
+                            fontSize: 13.sp,
                             color: Colors.red[700],
                             height: 0.5),
                       ),
@@ -187,7 +188,7 @@ class _CustomImagesFormFieldState extends State<CustomImagesFormField> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20),
-                  child: Text(filename, style: const TextStyle(color: Color(0xff080696), fontSize: 16, fontWeight: FontWeight.w400)),
+                  child: Text(filename, style: TextStyle(color: const Color(0xff080696), fontSize: 16.sp, fontWeight: FontWeight.w400)),
                 ),
               )
             ],

@@ -1,6 +1,7 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/domain/state/works/works_state.dart';
 import 'package:todotodo/internal/dependencies/works_module.dart';
@@ -54,24 +55,23 @@ class _ProviderWorksState extends State<ProviderWorks> {
             appBar: AppBar(
               centerTitle: true,
               backgroundColor: Colors.white,
-              bottom: const TabBar(
-                indicatorColor: Color(0xff080696),
-                labelColor: Color(0xff080696),
-                unselectedLabelColor: Color(0xff8A8A8A),
+              bottom: TabBar(
+                indicatorColor: const Color(0xff080696),
+                labelColor: const Color(0xff080696),
+                unselectedLabelColor: const Color(0xff8A8A8A),
                 tabs: [
-                  Text('В работе', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
-                  Text('Отправлено КП', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+                  Text('В работе', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400)),
+                  Text('Отправлено КП', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400)),
                 ],
               ),
-              // title: const Text('В работе', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black)),
             ),
             bottomNavigationBar: CustomNavigationBar(onTap: _bottomTab, currentIndex: 2, unSelectedColor: const Color(0xff8A8A8A), selectedColor: const Color(0xff080696), items: <CustomNavigationBarItem>[
-              CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: const Text('Заказы')),
-              CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: const Text('Подписка')),
-              CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: const Text('Статусы')),
-              CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: const Text('Архив')),
-              CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль')),
-              CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: const Text('Контакты'))
+              CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: Text('Заказы', style: TextStyle(fontSize: 10.sp))),
+              CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: Text('Подписка', style: TextStyle(fontSize: 10.sp))),
+              CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: Text('Статусы', style: TextStyle(fontSize: 10.sp))),
+              CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: Text('Архив', style: TextStyle(fontSize: 10.sp))),
+              CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: Text('Профиль', style: TextStyle(fontSize: 10.sp))),
+              CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: Text('Контакты', style: TextStyle(fontSize: 10.sp)))
             ]),
             backgroundColor: Colors.white,
             body: Observer(builder: (context) {
@@ -109,8 +109,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Дата: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["date"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["date"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -118,8 +118,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Номер заказа: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["order"]["id"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["order"]["id"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -127,8 +127,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Профиль: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["shape"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["shape"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -136,8 +136,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Фурнитура: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["implement"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["implement"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -145,8 +145,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Цена: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.works[index]["price"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -225,8 +225,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Номер заказа: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["order"]["id"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["order"]["id"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -234,8 +234,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Дата поставки: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["date"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["date"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -243,8 +243,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Профиль: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["shape"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["shape"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -252,8 +252,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Фурнитура: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["implement"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["implement"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -261,8 +261,8 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Предложенная цена: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: worksState.quantities[index]["price"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(

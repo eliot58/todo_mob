@@ -1,6 +1,7 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:todotodo/custom_icons.dart';
@@ -60,12 +61,12 @@ class _ProviderOrdersState extends State<ProviderOrders> {
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: CustomNavigationBar(onTap: _bottomTab, currentIndex: 0, unSelectedColor: const Color(0xff8A8A8A), selectedColor: const Color(0xff080696), items: <CustomNavigationBarItem>[
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: const Text('Заказы')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: const Text('Подписка')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: const Text('Статусы')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: const Text('Архив')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: const Text('Профиль')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: const Text('Контакты'))
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: Text('Заказы', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.wallet), title: Text('Подписка', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.redo), title: Text('Статусы', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: Text('Архив', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.bag), title: Text('Профиль', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.friends), title: Text('Контакты', style: TextStyle(fontSize: 10.sp)))
         ]),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -83,9 +84,9 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(right: 20),
-                          child: Image.asset('assets/img/provider-logo.png', width: 43, height: 43),
+                          child: Image.asset('assets/img/provider-logo.png', width: 43.w, height: 43.h),
                         ),
-                        const Text('Todotodo.поставщик', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xff080696))),
+                        Text('Todotodo.поставщик', style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700, color: const Color(0xff080696))),
                         GestureDetector(
                           onTap: () async {
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
@@ -135,9 +136,9 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                                       Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
-                                                          const Padding(
-                                                            padding: EdgeInsets.only(bottom: 15),
-                                                            child: Text('По дате', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(bottom: 15),
+                                                            child: Text('По дате', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600)),
                                                           ),
                                                           IconButton(
                                                               padding: const EdgeInsets.only(top: 15, bottom: 20, left: 0, right: 0),
@@ -152,14 +153,14 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                                         child: Row(
                                                           crossAxisAlignment: CrossAxisAlignment.center,
                                                           children: <Widget>[
-                                                            const Padding(
-                                                              padding: EdgeInsets.only(right: 20),
-                                                              child: Text('Сначала новые', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(right: 20),
+                                                              child: Text('Сначала новые', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)),
                                                             ),
                                                             FlutterSwitch(
                                                                 activeColor: Colors.white,
-                                                                width: 40,
-                                                                height: 18,
+                                                                width: 40.w,
+                                                                height: 18.h,
                                                                 borderRadius: 30.0,
                                                                 padding: 0,
                                                                 toggleColor: const Color(0xff454545),
@@ -173,9 +174,9 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                                           ],
                                                         ),
                                                       ),
-                                                      const Padding(
-                                                        padding: EdgeInsets.only(bottom: 20),
-                                                        child: Text('По цене', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(bottom: 20),
+                                                        child: Text('По цене', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600)),
                                                       ),
                                                       Container(
                                                         color: Colors.white,
@@ -198,7 +199,7 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                                         padding: const EdgeInsets.only(top: 5, bottom: 25),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: const <Widget>[Text('500 p', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400)), Text('200000 p', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400))],
+                                                          children: <Widget>[Text('500 p', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400)), Text('200000 p', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400))],
                                                         ),
                                                       ),
                                                       SizedBox(
@@ -217,7 +218,7 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                                             }
                                                             Navigator.pop(context);
                                                           },
-                                                          child: const Text('Подтвердить', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                                                          child: Text('Подтвердить', style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w600)),
                                                         ),
                                                       )
                                                     ],
@@ -229,7 +230,7 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                     });
                               },
                             ),
-                            hintStyle: const TextStyle(fontSize: 16, color: Color(0xff1C1C1E)),
+                            hintStyle: TextStyle(fontSize: 16.sp, color: const Color(0xff1C1C1E)),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                       ),
                     ),
@@ -263,8 +264,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Номер заказа: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["id"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["id"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -272,8 +273,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Количество окон: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["amount_window"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["amount_window"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -281,8 +282,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Желаемая цена: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["price"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -290,8 +291,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Профиль: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["shape"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["shape"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -299,8 +300,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Фурнитура: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["implement"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["implement"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -308,8 +309,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Тип оплаты: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["type_pay"] == 'C' ? "Карта" : "Безнал", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: ordersState.orders[index]["type_pay"] == 'C' ? "Карта" : "Безнал", style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -317,8 +318,8 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Тип доставки: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
-                                        children: <TextSpan>[TextSpan(text: delivery[ordersState.orders[index]["type_delivery"]], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
+                                        children: <TextSpan>[TextSpan(text: delivery[ordersState.orders[index]["type_delivery"]], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                       )),
                                     ),
                                     Padding(
@@ -326,11 +327,11 @@ class _ProviderOrdersState extends State<ProviderOrders> {
                                       child: RichText(
                                           text: TextSpan(
                                         text: 'Адрес: ',
-                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff080696)),
+                                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff080696)),
                                         children: <TextSpan>[
                                           TextSpan(
                                             text: ordersState.orders[index]['address'],
-                                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
+                                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black),
                                           )
                                         ],
                                       )),

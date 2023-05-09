@@ -1,8 +1,8 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/data/api/service/todo_service.dart';
 import 'package:todotodo/domain/state/works/works_state.dart';
@@ -22,8 +22,6 @@ class DilerWorks extends StatefulWidget {
 
 class _DilerWorksState extends State<DilerWorks> {
   late WorksState worksState;
-
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   void _bottomTab(int index) async {
     if (index == 0) {
@@ -51,11 +49,11 @@ class _DilerWorksState extends State<DilerWorks> {
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: CustomNavigationBar(onTap: _bottomTab, unSelectedColor: const Color(0xff8A8A8A), selectedColor: const Color(0xff15CE73), currentIndex: 1, items: <CustomNavigationBarItem>[
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: const Text('Заказы')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.works), title: const Text('В работе')),
-          CustomNavigationBarItem(icon: SvgPicture.asset('assets/img/create.svg'), title: const Text('Создать')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: const Text('Архив')),
-          CustomNavigationBarItem(icon: const Icon(CustomIcon.profile), title: const Text('Профиль'))
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.orders), title: Text('Заказы', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.works), title: Text('В работе', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: SvgPicture.asset('assets/img/create.svg'), title: Text('Создать', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.archive), title: Text('Архив', style: TextStyle(fontSize: 10.sp))),
+          CustomNavigationBarItem(icon: const Icon(CustomIcon.profile), title: Text('Профиль', style: TextStyle(fontSize: 10.sp)))
         ]),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -74,9 +72,9 @@ class _DilerWorksState extends State<DilerWorks> {
                         child: Row(crossAxisAlignment: CrossAxisAlignment.end, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(right: 20),
-                            child: Image.asset('assets/img/todotodo_logo.png', width: 43, height: 43),
+                            child: Image.asset('assets/img/todotodo_logo.png', width: 43.w, height: 43.h),
                           ),
-                          const Text('Todotodo.дилеры', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xff15CE73))),
+                          Text('Todotodo.дилеры', style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700, color: const Color(0xff15CE73))),
                           GestureDetector(
                             onTap: () async {
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
@@ -109,15 +107,15 @@ class _DilerWorksState extends State<DilerWorks> {
                                             children: <Widget>[
                                               Padding(
                                                 padding: const EdgeInsets.only(bottom: 12),
-                                                child: Text(worksState.works[index]['date'], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                                                child: Text(worksState.works[index]['date'], style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(bottom: 12),
                                                 child: RichText(
                                                     text: TextSpan(
                                                   text: 'Номер заказа: ',
-                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["order"]["id"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff15CE73)),
+                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["order"]["id"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                                 )),
                                               ),
                                               Padding(
@@ -125,8 +123,8 @@ class _DilerWorksState extends State<DilerWorks> {
                                                 child: RichText(
                                                     text: TextSpan(
                                                   text: 'Профиль: ',
-                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["shape"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff15CE73)),
+                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["shape"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                                 )),
                                               ),
                                               Padding(
@@ -134,8 +132,8 @@ class _DilerWorksState extends State<DilerWorks> {
                                                 child: RichText(
                                                     text: TextSpan(
                                                   text: 'Фурнитура: ',
-                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["implement"], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff15CE73)),
+                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["implement"], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                                 )),
                                               ),
                                               Padding(
@@ -143,8 +141,8 @@ class _DilerWorksState extends State<DilerWorks> {
                                                 child: RichText(
                                                     text: TextSpan(
                                                   text: 'Цена: ',
-                                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff15CE73)),
-                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["price"].toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black))],
+                                                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: const Color(0xff15CE73)),
+                                                  children: <TextSpan>[TextSpan(text: worksState.works[index]["price"].toString(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.black))],
                                                 )),
                                               ),
                                             ],

@@ -1,5 +1,6 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -394,7 +395,7 @@ class _OrderState extends State<Order> {
                                                   child: TextButton(
                                                       style: TextButton.styleFrom(padding: EdgeInsets.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap, alignment: Alignment.centerLeft),
                                                       onPressed: () async {
-                                                        var url = Uri.parse('http://127.0.0.1:8000${orderState.order["quantity_set"][index]["file"]}');
+                                                        var url = Uri.parse('${dotenv.env["api_url"]}${orderState.order["quantity_set"][index]["file"]}');
                                                         if (!await launchUrl(url)) {
                                                           throw 'Could not launch $url';
                                                         }

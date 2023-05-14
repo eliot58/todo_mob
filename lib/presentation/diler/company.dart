@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/domain/state/company/company_state.dart';
 import 'package:todotodo/internal/dependencies/company_module.dart';
 
@@ -34,7 +36,7 @@ class _CompanyState extends State<Company> {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(50),
       image: DecorationImage(
-        image: NetworkImage('http://127.0.0.1:8000${companyState.logourl}'),
+        image: NetworkImage('${dotenv.env["api_url"]}${companyState.logourl}'),
         fit: BoxFit.cover,
       ),
     );
@@ -111,9 +113,9 @@ class _CompanyState extends State<Company> {
                           ),
                           Row(
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 5),
-                                child: SvgPicture.asset('assets/img/phone.svg'),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(CustomIcon.phone),
                               ),
                               Text(companyState.contactphone, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                             ],
@@ -136,9 +138,9 @@ class _CompanyState extends State<Company> {
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Row(
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 5),
-                                child: SvgPicture.asset('assets/img/ico/phone.svg'),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(CustomIcon.phone),
                               ),
                               Text(companyState.servicephone, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                             ],
@@ -146,9 +148,9 @@ class _CompanyState extends State<Company> {
                         ),
                         Row(
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(right: 5),
-                              child: SvgPicture.asset('assets/img/ico/mail.svg'),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Icon(CustomIcon.mail),
                             ),
                             Text(companyState.serviceemail, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                           ],

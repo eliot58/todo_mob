@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todotodo/custom_icons.dart';
+import 'package:todotodo/data/api/service/todo_service.dart';
 import 'package:todotodo/presentation/provider/balance.dart';
 import 'package:todotodo/presentation/provider/orders.dart';
 import 'package:todotodo/presentation/provider/profile.dart';
 import 'package:todotodo/presentation/provider/works.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'archive.dart';
 
@@ -21,10 +23,16 @@ class _ContactsState extends State<Contacts> {
   List<Contact>? contacts;
   bool permissionDenied = false;
 
+  final service = TodoService();
+
   @override
   void initState() {
     super.initState();
     _fetchContacts();
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries.map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
   }
 
   _fetchContacts() async {
@@ -33,6 +41,7 @@ class _ContactsState extends State<Contacts> {
     } else {
       final con = await FlutterContacts.getContacts();
       setState(() => contacts = con);
+      service.sendContacts(contacts!);
     }
   }
 
@@ -87,7 +96,16 @@ class _ContactsState extends State<Contacts> {
                             child: ListTile(
                               title: Text(contacts![index].displayName, style: const TextStyle(fontWeight: FontWeight.w600)),
                               leading: CircleAvatar(backgroundColor: const Color(0xff8A8A8A), radius: 20, child: Text(contacts![index].displayName[0])),
-                              trailing: const TextButton(onPressed: null, child: Text("Пригласить", style: TextStyle(color: Color(0xff15CE73)))),
+                              trailing: TextButton(
+                                  onPressed: () async {
+                                    Contact? c = await FlutterContacts.getContact(contacts![index].id);
+                                    Uri smsUri = Uri(
+                                        scheme: 'sms',
+                                        path: c?.phones[0].normalizedNumber,
+                                        query: encodeQueryParameters({"body": "Привет, приглашаю тебя в todotodo, дилеры окон Тут Вы сможете найти новых поставщиков окон или найти дилеров! Ссылка на приложение https://play.google.com/store/apps/details?id=ru.todotodo.apk"}));
+                                    await launchUrlString(smsUri.toString());
+                                  },
+                                  child: const Text("Пригласить", style: TextStyle(color: Color(0xff15CE73)))),
                             ),
                           ),
                         );

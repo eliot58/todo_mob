@@ -1,5 +1,6 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todotodo/custom_icons.dart';
@@ -160,7 +161,7 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                               child: TextButton(
                                                   style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(50, 10), tapTargetSize: MaterialTapTargetSize.shrinkWrap, alignment: Alignment.centerLeft),
                                                   onPressed: () async {
-                                                    var url = Uri.parse('http://127.0.0.1:8000${worksState.works[index]["order"]["file"]}');
+                                                    var url = Uri.parse('${dotenv.env["api_url"]}${worksState.works[index]["order"]["file"]}');
                                                     if (!await launchUrl(url)) {
                                                       throw 'Could not launch $url';
                                                     }
@@ -186,7 +187,7 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                                   alignment: Alignment.centerLeft,
                                                 ),
                                                 onPressed: () async {
-                                                  var url = Uri.parse('http://127.0.0.1:8000${worksState.works[index]["file"]}');
+                                                  var url = Uri.parse('${dotenv.env["api_url"]}${worksState.works[index]["file"]}');
                                                   if (!await launchUrl(url)) {
                                                     throw 'Could not launch $url';
                                                   }
@@ -280,7 +281,7 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                                   alignment: Alignment.centerLeft,
                                                 ),
                                                 onPressed: () async {
-                                                  var url = Uri.parse('http://127.0.0.1:8000${worksState.quantities[index]["file"]}');
+                                                  var url = Uri.parse('${dotenv.env["api_url"]}${worksState.quantities[index]["file"]}');
                                                   if (!await launchUrl(url)) {
                                                     throw 'Could not launch $url';
                                                   }

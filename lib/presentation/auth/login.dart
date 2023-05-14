@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:todotodo/custom_icons.dart';
 import 'package:todotodo/domain/state/login/login_state.dart';
@@ -108,7 +109,7 @@ class _LoginState extends State<Login> {
                               ),
                               TextButton(
                                   onPressed: () async {
-                                    var url = Uri.parse('http://127.0.0.1:8000/password_reset/');
+                                    var url = Uri.parse('${dotenv.env["api_url"]}/password_reset/');
                                     if (!await launchUrl(url)) {
                                       throw 'Could not launch $url';
                                     }

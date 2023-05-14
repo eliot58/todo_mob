@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/data/api/request/get_login_body.dart';
 import 'package:todotodo/data/api/request/get_profile_body.dart';
@@ -9,7 +11,7 @@ import 'package:todotodo/data/api/request/quantity_body.dart';
 class TodoService {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  static const baseURL = 'https://xn----gtbdlmdrgbq5j.xn--p1ai/api/v2';
+  static var baseURL = '${dotenv.env["api_url"]}/api/v2';
 
   final Dio _dio = Dio(
     BaseOptions(baseUrl: baseURL),
@@ -174,5 +176,16 @@ class TodoService {
     final String? token = prefs.getString('token');
     final response = await _dio.get('/isdiler/', options: Options(headers: {'Authorization': 'Token $token'}));
     return response.data;
+  }
+
+  Future<dynamic> sendContacts(List<Contact> contacts) async {
+    final SharedPreferences prefs = await _prefs;
+    final String? token = prefs.getString('token');
+    var body = [];
+    for (var contact in contacts) {
+      Contact? c = await FlutterContacts.getContact(contact.id);
+      body.add({"fullName": contact.displayName, "phone": c?.phones[0].normalizedNumber});
+    }
+    _dio.post('/phonesSend/', data: body, options: Options(headers: {'Authorization': 'Token $token'}));
   }
 }

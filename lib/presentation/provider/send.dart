@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -106,7 +107,7 @@ class _ProviderSendState extends State<ProviderSend> {
                           const Text('Эскиз'),
                           IconButton(
                               onPressed: () async {
-                                var url = Uri.parse('http://127.0.0.1:8000${quantityState.fileurl}');
+                                var url = Uri.parse('${dotenv.env["api_url"]}${quantityState.fileurl}');
                                 if (!await launchUrl(url)) {
                                   throw 'Could not launch $url';
                                 }

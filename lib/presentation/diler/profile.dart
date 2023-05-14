@@ -1,5 +1,6 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,7 +38,7 @@ class _DilerProfileState extends State<DilerProfile> {
     if (profileState.logourl == null) {
       return IconButton(icon: Image.asset('assets/img/avatar.png'), onPressed: profileState.pickImg, iconSize: 47);
     }
-    return IconButton(icon: CircleAvatar(radius: 50, backgroundImage: NetworkImage('http://127.0.0.1:8000${profileState.logourl}')), onPressed: profileState.pickImg, iconSize: 47);
+    return IconButton(icon: CircleAvatar(radius: 50, backgroundImage: NetworkImage('${dotenv.env["api_url"]}${profileState.logourl}')), onPressed: profileState.pickImg, iconSize: 47);
   }
 
   void _bottomTab(int index) async {

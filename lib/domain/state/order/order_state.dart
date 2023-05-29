@@ -90,7 +90,7 @@ abstract class OrderStateBase with Store {
         amountwindow: int.parse(windowCountController.text),
         price: int.parse(priceController.text),
         comment: commentController.text,
-        files: [for (var path in paths ?? []) MultipartFile.fromBytes(path.bytes, filename: path.name)]);
+        file: MultipartFile.fromBytes(paths!.first.bytes!, filename: paths!.first.name));
   }
 
   search(s, ss) {

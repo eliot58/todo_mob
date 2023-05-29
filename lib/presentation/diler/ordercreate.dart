@@ -238,7 +238,7 @@ class _OrderCreateState extends State<OrderCreate> {
                           padding: const EdgeInsets.only(bottom: 20),
                           child: Container(
                               padding: const EdgeInsets.only(left: 30, right: 30),
-                              child: CustomImagesFormField(
+                              child: CustomImageFormField(
                                 validator: (_) {
                                   if (orderState.paths == null) return 'Прикрепите файл';
                                   return null;

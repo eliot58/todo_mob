@@ -74,18 +74,27 @@ abstract class ProfileStateBase with Store {
     for (var shape in data["shapes_select"]) {
       shapes.add(shape["data"]);
       selectedShapesId[shape["data"]] = shape["id"];
+      if (data["shapes"].indexOf(shape["id"]) != -1) {
+        selectedShapes.add(shape["data"]);
+      }
     }
     for (var implement in data["implements_select"]) {
       implements.add(implement["data"]);
       selectedImplementsId[implement["data"]] = implement["id"];
+      if (data["implements"].indexOf(implement["id"]) != -1) {
+        selectedImpl.add(implement["data"]);
+      }
     }
     for (var region in data["regions_select"]) {
       regions.add(region["data"]);
       selectedRegionsId[region["data"]] = region["id"];
+      if (data["regions"].indexOf(region["id"]) != -1) {
+        selectedRegions.add(region["data"]);
+      }
     }
-    selectedShapes.addAll([for (var shape in data["shapes"]) shapes[shape - 1]]);
-    selectedImpl.addAll([for (var implement in data["implements"]) implements[implement - 1]]);
-    selectedRegions.addAll([for (var region in data["regions"]) regions[region - 1]]);
+    // selectedShapes.addAll([for (var shape in data["shapes"]) data["shapes_select"]["id"] == shape ? data["shapes_select"]["data"] : ]);
+    // selectedImpl.addAll([for (var implement in data["implements"]) implements[implement - 1]]);
+    // selectedRegions.addAll([for (var region in data["regions"]) regions[region - 1]]);
     isLoading = false;
   }
 

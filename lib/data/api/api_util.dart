@@ -99,8 +99,8 @@ class ApiUtil {
     return result;
   }
 
-  Future<dynamic> createOrder({required int shape, required int implement, required String address, required String typePay, required String typeDelivery, required int amountwindow, required int price, required String comment, required List<MultipartFile> files}) async {
-    final body = CreateOrderBody(shape: shape, implement: implement, address: address, typePay: typePay, typeDelivery: typeDelivery, amountwindow: amountwindow, price: price, comment: comment, files: files);
+  Future<dynamic> createOrder({required int shape, required int implement, required String address, required String typePay, required String typeDelivery, required int amountwindow, required int price, required String comment, required MultipartFile file}) async {
+    final body = CreateOrderBody(shape: shape, implement: implement, address: address, typePay: typePay, typeDelivery: typeDelivery, amountwindow: amountwindow, price: price, comment: comment, file: file);
     final result = await todoService.createOrder(body);
     return result;
   }

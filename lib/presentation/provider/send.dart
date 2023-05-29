@@ -108,7 +108,7 @@ class _ProviderSendState extends State<ProviderSend> {
                           IconButton(
                               onPressed: () async {
                                 var url = Uri.parse('${dotenv.env["api_url"]}${quantityState.fileurl}');
-                                if (!await launchUrl(url)) {
+                                if (!await launch('${dotenv.env["api_url"]}${quantityState.fileurl}')) {
                                   throw 'Could not launch $url';
                                 }
                               },

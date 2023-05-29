@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todotodo/domain/repository/orders_repository.dart';
@@ -39,7 +40,7 @@ abstract class OrdersStateBase with Store {
   Future<void> deleteOrder(index) async {
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
-    Dio().delete('http://127.0.0.1:8000/api/v2/order/?id=${orders[index]["id"]}', options: Options(headers: {'Authorization': 'Token $token'}));
+    Dio().delete('${dotenv.env["api_url"]}/api/v2/order/?id=${orders[index]["id"]}', options: Options(headers: {'Authorization': 'Token $token'}));
   }
 
   @action

@@ -23,24 +23,23 @@ abstract class RegisterStateBase with Store {
   String? phonevalidator;
 
   @action
-  Future<void> register(
-      {required String email,
-      required String phone,
-      required String spec,
-      required String fullName}) async {
+  Future<void> register({required String email, required String phone, required String spec, required String fullName}) async {
     isLoading = true;
-    final data = await registerRepository.register(
-        email: email, phone: phone, spec: spec, fullName: fullName);
+    final data = await registerRepository.register(email: email, phone: phone, spec: spec, fullName: fullName);
     if (data != null) {
       if (data.containsKey("detail")) {
         if (data["detail"] == "Success Sign-Up") {
+          uservalidator = null;
+          phonevalidator = null;
           registerData = true;
-        } else {
-          uservalidator = data.containsKey("email") ? data["email"][0] : null;
-          phonevalidator = data.containsKey("phone") ? data["phone"][0] : null;
+        } else if (data["detail"] == "Invalid Credentials") {
+          uservalidator = null;
+          phonevalidator = null;
+          registerData = false;
         }
       } else {
-        registerData = false;
+        uservalidator = data.containsKey("email") ? data["email"][0] : null;
+        phonevalidator = data.containsKey("phone") ? data["phone"][0] : null;
       }
     }
     isLoading = false;

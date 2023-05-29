@@ -396,7 +396,7 @@ class _OrderState extends State<Order> {
                                                       style: TextButton.styleFrom(padding: EdgeInsets.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap, alignment: Alignment.centerLeft),
                                                       onPressed: () async {
                                                         var url = Uri.parse('${dotenv.env["api_url"]}${orderState.order["quantity_set"][index]["file"]}');
-                                                        if (!await launchUrl(url)) {
+                                                        if (!await launch('${dotenv.env["api_url"]}${orderState.order["quantity_set"][index]["file"]}')) {
                                                           throw 'Could not launch $url';
                                                         }
                                                       },

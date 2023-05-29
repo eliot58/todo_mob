@@ -162,7 +162,7 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                                   style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(50, 10), tapTargetSize: MaterialTapTargetSize.shrinkWrap, alignment: Alignment.centerLeft),
                                                   onPressed: () async {
                                                     var url = Uri.parse('${dotenv.env["api_url"]}${worksState.works[index]["order"]["file"]}');
-                                                    if (!await launchUrl(url)) {
+                                                    if (!await launch('${dotenv.env["api_url"]}${worksState.works[index]["order"]["file"]}')) {
                                                       throw 'Could not launch $url';
                                                     }
                                                   },
@@ -188,7 +188,7 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                                 ),
                                                 onPressed: () async {
                                                   var url = Uri.parse('${dotenv.env["api_url"]}${worksState.works[index]["file"]}');
-                                                  if (!await launchUrl(url)) {
+                                                  if (!await launch('${dotenv.env["api_url"]}${worksState.works[index]["file"]}')) {
                                                     throw 'Could not launch $url';
                                                   }
                                                 },
@@ -282,7 +282,7 @@ class _ProviderWorksState extends State<ProviderWorks> {
                                                 ),
                                                 onPressed: () async {
                                                   var url = Uri.parse('${dotenv.env["api_url"]}${worksState.quantities[index]["file"]}');
-                                                  if (!await launchUrl(url)) {
+                                                  if (!await launch('${dotenv.env["api_url"]}${worksState.quantities[index]["file"]}')) {
                                                     throw 'Could not launch $url';
                                                   }
                                                 },

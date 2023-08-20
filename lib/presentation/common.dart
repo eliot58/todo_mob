@@ -64,8 +64,8 @@ class _CustomImageFormFieldState extends State<CustomImageFormField> {
                         borderRadius: BorderRadius.circular(8),
                         color: const Color(0xff707070).withOpacity(0.1),
                       ),
-                      child: Column(
-                        children: const [
+                      child: const Column(
+                        children: [
                           Icon(Icons.upload_file),
                           Text('Прикрепите файл')
                         ],

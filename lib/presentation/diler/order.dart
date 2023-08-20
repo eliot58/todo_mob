@@ -352,7 +352,8 @@ class _OrderState extends State<Order> {
                                                   child: TextButton(
                                                       style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(50, 30), tapTargetSize: MaterialTapTargetSize.shrinkWrap, alignment: Alignment.centerLeft),
                                                       onPressed: () async {
-                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Company(id: orderState.order["quantity_set"][index]["author"])));
+                                                        print(orderState.order);
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Company(id: orderState.order["quantity_set"][index]["author_id"])));
                                                       },
                                                       child: Text(orderState.order["quantity_set"][index]["author"], overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.blue))),
                                                 ),

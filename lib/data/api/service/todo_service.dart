@@ -153,7 +153,7 @@ class TodoService {
   Future<dynamic> getCompanyData(int id) async {
     final SharedPreferences prefs = await _prefs;
     final String? token = prefs.getString('token');
-    final response = await _dio.get('/prices/', options: Options(headers: {'Authorization': 'Token $token'}));
+    final response = await _dio.get('/company/$id/', options: Options(headers: {'Authorization': 'Token $token'}));
     return response.data;
   }
 

@@ -32,7 +32,19 @@ abstract class CompanyStateBase with Store {
   Future<void> getComapnyData(int id) async {
     isLoading = true;
     final data = await companyRepository.getCompanyData(id: id);
-
+    logourl = data["company"]["logo"];
+    company = data["company"]["company"];
+    address = data["company"]["product_address"];
+    contactentity = data["company"]["contact_entity"];
+    contactphone = data["company"]["contact_phone"];
+    serviceentity = data["company"]["service_entity"];
+    serviceemail = data["company"]["service_email"];
+    servicephone = data["company"]["service_phone"];
+    shapes = data["company"]["shapes"].join(", ");
+    implements = data["company"]["implements"].join(", ");
+    regions = data["company"]["regions"].join(", ");
+    description = data["company"]["description"];
+    reviews = data["reviews"];
     isLoading = false;
   }
 }

@@ -139,8 +139,8 @@ class _CompanyState extends State<Company> {
                           child: Row(
                             children: <Widget>[
                               const Padding(
-                                padding: EdgeInsets.only(right: 5),
-                                child: Icon(CustomIcon.phone),
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(CustomIcon.phone, size: 24),
                               ),
                               Text(companyState.servicephone, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                             ],
@@ -149,8 +149,8 @@ class _CompanyState extends State<Company> {
                         Row(
                           children: <Widget>[
                             const Padding(
-                              padding: EdgeInsets.only(right: 5),
-                              child: Icon(CustomIcon.mail),
+                              padding: EdgeInsets.only(right: 10),
+                              child: Icon(CustomIcon.mail, size: 18),
                             ),
                             Text(companyState.serviceemail, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500))
                           ],
@@ -168,17 +168,20 @@ class _CompanyState extends State<Company> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: Row(
-                            children: <Widget>[Text('Профили:', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.shapes, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[Text('Профили:  ', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.shapes, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: Row(
-                            children: <Widget>[Text('Фурнитуры:', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.implements, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[Text('Фурнитуры:  ', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.implements, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
                           ),
                         ),
                         Row(
-                          children: <Widget>[Text('Регионы:', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.regions, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[Text('Регионы:  ', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)), Expanded(child: Text(companyState.regions, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500)))],
                         ),
                       ]),
                     )),
